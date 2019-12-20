@@ -1,0 +1,25 @@
+server:
+  port: 8080
+  connection-timeout: 1800000
+  session:
+    timeout: 18000
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/filemanage?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2b8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: ily520wan
+    type: com.alibaba.druid.pool.DruidDataSource
+  thymeleaf:
+    cache: false
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis:
+  type-handlers-package: cn.bb.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true

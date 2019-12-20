@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}">
+  <link rel="stylesheet" th:href="@{/res/css/global.css}">
+  <link rel="stylesheet" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+</head>
+
+<script th:fragment="script">
+</script>
+<!--头部-->
+<div th:fragment="commonHeader" >
+  <div class="fly-header layui-bg-black" >
+    <div class="layui-container">
+      <span class="logo-lg fly-logo" style="font-size: 36px;top:5px"><b>File</b>Manage</span>
+
+      <ul class="layui-nav fly-nav-user">
+
+        <shiro:hasRole name="common">　　
+          <li class="layui-nav-item">
+            <a class="fly-nav-avatar" href="javascript:;">
+              <cite class="layui-hide-xs" id="myName" th:text="'欢迎 '+${session.account}"></cite>
+            </a>
+          </li>
+
+          <li class="layui-nav-item">
+            <a class="fly-nav-avatar" th:href="@{/user/logout}">
+              <cite class="layui-hide-xs"  th:text="退出"></cite>
+            </a>
+          </li>
+
+        </shiro:hasRole>
+
+        <shiro:lacksRole name="common">　　
+            <li class="layui-nav-item">
+              <a th:href="@{/user/toLogin}">登入</a>
+            </li>
+            <li class="layui-nav-item">
+              <a th:href="@{/user/toReg}">注册</a>
+            </li>
+        </shiro:lacksRole>
+      </ul>
+    </div>
+  </div>
+</div>
+<!--导航栏-->
+<div th:fragment="navigation">
+  <div class="fly-panel fly-column">
+    <div class="layui-container">
+      <ul class="layui-clear">
+        <li class="layui-hide-xs "><a th:href="@{/index/toFile}" style="color: black">首页</a></li>
+        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
+      </ul>
+
+    </div>
+  </div>
+</div>
+<!--尾部-->
+<div th:fragment="footer">
+  <div class="fly-footer" >
+    <p><a href="" target="_blank">File 社区</a> 2019 &copy; <a href="" target="_blank">肖剑波 出品</a></p>
+  </div>
+</div>

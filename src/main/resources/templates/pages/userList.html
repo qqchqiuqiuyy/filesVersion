@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+  <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}"></link>
+  <link rel="stylesheet" th:href="@{/res/css/global.css}"></link>
+  <link rel="stylesheet" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}"></link>
+</head>
+<body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script th:include="common/common :: script"></script>
+<!---->
+<div th:include="common/common :: commonHeader"></div>
+<!--横-->
+<div th:include="common/common :: navigation"></div>
+
+<div class="layui-container">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md8">
+      <div class="fly-panel" style="margin-bottom: 0;">
+
+        <div class=" fly-filter">
+          <table>
+            <tr>
+              <td> <div href="" class="layui-this" style="width:350px"><h1>用户列表</h1></div></td>
+              <!--搜索框-->
+                <td>
+                     <form class="form-inline layui-form" th:action="@{/user/userList}" type="post" >
+                        <input type="text"  name="fileName"   placeholder="搜索用户" autocomplete="off" class="layui-input" style="width:150px"/>
+                     </form>
+                </td>
+               <td>
+                 <button style="float: left" type="submit" class="layui-btn layui-btn-normal" >确认</button>
+               </td>
+
+            </tr>
+          </table>
+          <table class="layui-table">
+              <thead>
+              <tr>
+                  <th>用户名</th>
+                  <th>授权删除</th>
+
+              </tr>
+              </thead>
+              <tbody>
+              <div th:each="user:${users}">
+                  <tr>
+                      <td th:text="${user.account}"></td>
+                          <td>
+                              <button  th:id="'bt' + ${user.id}" th:value="${user.id}" onclick="GitU(this.value)"  style="color: white;" class="layui-btn layui-btn-danger">授权</button>
+                          </td>
+                  </tr>
+              </div>
+
+              </tbody>
+          </table>
+
+        <div style="text-align: center">
+          <!--分页-->
+          <div style="margin-top: 40px">
+            <ul class="pagination" >
+              <li th:class="${indexPage==1}?'disabled' : ''"><a th:href="@{'/index/toFile?indexPage=' + ${indexPage-1}  +'&fileName=' + ${fileName}  }">&laquo;</a></li>
+              <li th:if="${indexPage-3 >=1}" ><a th:href="@{'/index/toFile?indexPage=' + ${indexPage-3}  +'&fileName=' + ${fileName}   }" th:text="${indexPage -3}" >1</a></li>
+              <li th:if="${indexPage-2 >=1}" ><a th:href="@{'/index/toFile?indexPage=' + ${indexPage-2}  +'&fileName=' + ${fileName}     }" th:text="${indexPage -2}" >1</a></li>
+              <li th:if="${indexPage-1 >=1}" ><a th:href="@{'/index/toFile?indexPage=' + ${indexPage-1}  +'&fileName=' + ${fileName}   }" th:text="${indexPage -1}" >1</a></li>
+              <li class="active"><a href="#" th:text="${indexPage}" >1</a></li>
+              <li th:if="${indexPage+1 <=totalPage}" ><a th:href="@{'/index/toFile?indexPage=' + ${indexPage+1}   +'&fileName=' + ${fileName}   }" th:text="${indexPage +1}" >1</a></li>
+              <li th:if="${indexPage+2 <=totalPage}" ><a th:href="@{'/index/toFile?indexPage=' + ${indexPage+2}  +'&fileName=' + ${fileName}   }" th:text="${indexPage +2}" >1</a></li>
+              <li th:if="${indexPage+3 <=totalPage}" ><a th:href="@{'/index/toFile?indexPage=' + ${indexPage+3}  +'&fileName=' + ${fileName}     }" th:text="${indexPage +3}" >1</a></li>
+              <li th:class="${indexPage==totalPage}?'disabled' : ''" ><a th:href="@{'/index/toFile?indexPage=' + ${indexPage+1}   +'&fileName=' + ${fileName}   }" href="#">&raquo;</a></li>
+            </ul>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div  th:include="common/common :: footer"></div>
+
+<script th:src="@{/res/layui/layui.js}"></script>
+<script>
+  /*点赞*/
+
+layui.config({
+  version: "3.0.0",
+  base: '/res/mods/'
+}).extend({
+  fly: 'index'
+}).use('fly');
+</script>
+<script type="text/javascript">
+  $(function () {
+    $(".layui-clear li").eq(2).addClass("layui-this");
+  });
+
+  function GitU(userId) {
+      $.ajax({
+          url:"/user/giveMan/"+userId,
+          type:"put",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+                $('#bt' + userId).parent().parent().remove();
+          },
+          error:function (data) {
+              layer.msg("请登录哦~")
+          }
+
+      });
+  }
+</script>
+</body>
+</html>
