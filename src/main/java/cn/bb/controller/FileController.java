@@ -30,6 +30,7 @@ public class FileController {
     @ResponseBody
     public String addFile(MultipartFile file, @RequestParam("fileMsg") String fileMsg) {
         return fileService.addFile(file,fileMsg);
+
     }
 
     @RequestMapping("/toUpload")

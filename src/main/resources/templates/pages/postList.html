@@ -19,43 +19,11 @@
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md8">
       <div class="fly-panel" >
-          <div class="fly-panel-title fly-filter">
-              <span style="font-size: 20px;display: inline-block;margin-right: 20px">帖子列表</span>
-              <span>
-                  <form class="form-inline layui-form" style="display: inline-block" th:action="@{/index/toFile}" type="post" >
-                        <input type="text"  name="fileName"   placeholder="搜索帖子" autocomplete="off" class="layui-input" style="width:150px"/>
-                     </form>
-                   <button style="display: inline-block" type="submit" class="layui-btn layui-btn-normal" >确认</button>
-              </span>
-          </div>
-          <!--
-          todo
-            需要替换
-          -->
-          <ul class="fly-list" >
-            <div th:each="file:${files}">
-                  <li style="padding-bottom: 65px;">
-                      <a  th:href="@{/user/userMessage/{userId}(userId=${file.id})}" style="text-decoration: none;display:inline-block;" class="fly-avatar" th:text="${file.fileName}"></a>
-                      <h2 style="display: inline-block;padding-left: 100px;padding-top:5px;padding-bottom:0px;margin:0 0 0 0">
-                          <a class="layui-badge" style="text-decoration: none" >分享</a>
-                          <a th:href="@{/index/postMsg/{postId}(postId=${file.id})}" style="text-decoration: none"  th:text="${file.fileName}"></a>
-                      </h2>
-                      <div class="fly-list-info">
-                          <span th:text="${file.uploadTime}">刚刚</span>
-                          <span class="fly-list-nums">
-                            <i class="iconfont icon-pinglun1" title="回答"></i> 66
-                          </span>
-                      </div>
-                      <hr style="border: 0;height: 1px;background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));" />
-                  </li>
-            </div>
-          </ul>
-
-       <!-- <div class="fly-panel-title fly-filter">
+        <div class="fly-panel-title fly-filter">
           <table>
             <tr>
               <td> <div href="" class="layui-this" style="width:350px"><h1>文件列表</h1></div></td>
-              &lt;!&ndash;搜索框&ndash;&gt;
+              <!--搜索框-->
                 <td>
                      <form class="form-inline layui-form" th:action="@{/index/toFile}" type="post" >
                         <input type="text"  name="fileName"   placeholder="搜索帖子" autocomplete="off" class="layui-input" style="width:150px"/>
@@ -66,12 +34,12 @@
                </td>
 
             </tr>
-             &lt;!&ndash; <shiro:hasRole name="manager">　　
+             <!-- <shiro:hasRole name="manager">　　
                   <tr>
                       <a th:href="@{/file/toUpload}" style="color: white"  class="layui-btn">上传文件</a>
                       <a th:href="@{/user/toUserList}" style="color: white"  class="layui-btn">授权</a>
                   </tr>
-              </shiro:hasRole>&ndash;&gt;
+              </shiro:hasRole>-->
           </table>
           <table class="layui-table">
               <thead>
@@ -105,8 +73,8 @@
               </tbody>
           </table>
 
-          <div style="text-align: center">
-          &lt;!&ndash;分页&ndash;&gt;
+        <div style="text-align: center">
+          <!--分页-->
           <div style="margin-top: 40px">
             <ul class="pagination" >
               <li th:class="${indexPage==1}?'disabled' : ''"><a th:href="@{'/index/toFile?indexPage=' + ${indexPage-1}  +'&fileName=' + ${fileName}  }">&laquo;</a></li>
@@ -123,8 +91,8 @@
           </div>
 
         </div>
-        </div>-->
 
+      </div>
     </div>
   </div>
 </div>
