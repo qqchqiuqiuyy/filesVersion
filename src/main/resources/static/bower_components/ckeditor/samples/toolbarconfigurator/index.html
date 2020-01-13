@@ -417,7 +417,7 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 		// Make the toolbar sticky.
 		positionSticky.watch( CKEDITOR.document.findOne( '.editors-container' ) );
 
-		// Help button and help-content.
+		// Help button and help-Content.
 		( function() {
 			var helpButton = CKEDITOR.document.getById( 'help' ),
 				helpContent = CKEDITOR.document.getById( 'help-content' );
@@ -429,11 +429,11 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 				// Display help modal when the button is clicked.
 				helpButton.on( 'click', function( evt ) {
 					SF.modal( {
-						// Clone modal content from DOM.
+						// Clone modal Content from DOM.
 						content: helpContent.getHtml(),
 
 						afterCreate: function( modal ) {
-							// Enable modal content button to close the modal.
+							// Enable modal Content button to close the modal.
 							new CKEDITOR.dom.element( modal.modalElem() ).findOne( '.help-content-close' ).once( 'click', modal.close );
 						}
 					} ).show();

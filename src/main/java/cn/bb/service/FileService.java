@@ -5,6 +5,7 @@ import cn.bb.common.Page;
 import cn.bb.common.Util;
 import cn.bb.dao.FileMapper;
 import cn.bb.entity.File;
+import cn.bb.entity.PostFile;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
@@ -41,8 +42,9 @@ public class FileService {
     }
 
     public String downloadFile(Integer id, HttpServletRequest request, HttpServletResponse response) {
-        File file = fileMapper.GetFileById(id);
-        String path = file.getPath();
+      /*  File file = fileMapper.GetFileById(id);*/
+        PostFile postFile = fileMapper.GetPostPath(id);
+        String path = postFile.getPath();
         java.io.File realFile = new java.io.File(path);
         if (!realFile.exists()) {
             jsonObject.put("msg","无法找到下载文件");
@@ -51,7 +53,7 @@ public class FileService {
         }
         String fileName = "";
         try {
-            fileName = new String(file.getFileName().getBytes("UTF-8"),"ISO-8859-1");
+            fileName = new String(postFile.getPostFileName().getBytes("UTF-8"),"ISO-8859-1");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -117,6 +119,7 @@ public class FileService {
         }
         jsonObject.put("msg","上传成功");
         jsonObject.put("success",1);
+        jsonObject.put("path",path);
         return jsonObject.toString();
     }
 

@@ -9,8 +9,12 @@ import java.sql.Timestamp;
 @ToString
 public class Post {
     private Integer postId;
-    private Integer postFromId;
-    private String postName;
-    private String postFromName;
+    private Integer postUserId;
+    private String postTitle;
+    private String postUserName;
     private Timestamp postCreatTime;
+    private String path;
+    private String postFileName;
+    private Integer postLike;
+    private String postContent;
 }

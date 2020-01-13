@@ -1,6 +1,7 @@
 package cn.bb.dao;
 
 import cn.bb.entity.File;
+import cn.bb.entity.PostFile;
 import org.apache.ibatis.annotations.*;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -13,7 +14,7 @@ public interface FileMapper {
     public List<File> GetFileList(@Param("fileName") String fileName);
 
 
-    @Select("SELECT * from files WHERE id = #{id}")
+    @Select("SELECT * from posts WHERE id = #{id}")
     public File GetFileById(@Param("id") Integer id);
 
     @Insert("INSERT INTO files (fileName,path,size,msg) VALUES (#{file.fileName}, #{file.path}, #{file.size}, #{file.msg})")
@@ -24,4 +25,7 @@ public interface FileMapper {
 
     @Update("DELETE FROM files WHERE id = #{id}")
     public void DeleteFileById(@Param("id")Integer id);
+
+    @Select("SELECT path, postFileName FROM posts WHERE postId = #{id}")
+    public PostFile GetPostPath(@Param("id") Integer id);
 }

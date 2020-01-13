@@ -235,7 +235,7 @@ a[data-goto]:hover {
 /* Fake Table Rows
 --------------------------------------------------------------------------------------------------*/
 .fc .fc-row {
-  /* extra precedence to overcome themes w/ .ui-widget-content forcing a 1px border */
+  /* extra precedence to overcome themes w/ .ui-widget-Content forcing a 1px border */
   /* no visible border by default. but make available if need be (scrollbar width compensation) */
   border-style: solid;
   border-width: 0; }
@@ -282,7 +282,7 @@ a[data-goto]:hover {
   z-index: 3; }
 
 /*
-row content (which contains day/week numbers and events) as well as "helper" (which contains
+row Content (which contains day/week numbers and events) as well as "helper" (which contains
 temporary rendered events).
 */
 .fc-row .fc-content-skeleton {
@@ -873,7 +873,7 @@ NOTE: use percentage font sizes or else old IE chokes
   min-height: 4em;
   /* ensure that all rows are at least this tall */ }
 
-/* a "rigid" row will take up a constant amount of height because content-skeleton is absolute */
+/* a "rigid" row will take up a constant amount of height because Content-skeleton is absolute */
 .fc-row.fc-rigid {
   overflow: hidden; }
 
@@ -958,7 +958,7 @@ NOTE: use percentage font sizes or else old IE chokes
 --------------------------------------------------------------------------------------------------*/
 .fc-time-grid-container,
 .fc-time-grid {
-  /* so slats/bg/content/etc positions get scoped within here */
+  /* so slats/bg/Content/etc positions get scoped within here */
   position: relative;
   z-index: 1; }
 
@@ -967,7 +967,7 @@ NOTE: use percentage font sizes or else old IE chokes
   /* so if height setting is 'auto', .fc-bg stretches to fill height */ }
 
 .fc-time-grid table {
-  /* don't put outer borders on slats/bg/content/etc */
+  /* don't put outer borders on slats/bg/Content/etc */
   border: 0 hidden transparent; }
 
 .fc-time-grid > .fc-bg {
@@ -990,7 +990,7 @@ NOTE: use percentage font sizes or else old IE chokes
   left: 0;
   right: 0; }
 
-/* divs within a cell within the fc-content-skeleton */
+/* divs within a cell within the fc-Content-skeleton */
 .fc-time-grid .fc-business-container {
   position: relative;
   z-index: 1; }
@@ -1216,7 +1216,7 @@ be a descendant of the grid when it is being dragged.
 /* table resets */
 .fc .fc-list-table {
   table-layout: auto;
-  /* for shrinkwrapping cell content */ }
+  /* for shrinkwrapping cell Content */ }
 
 .fc-list-table td {
   border-width: 1px 0 0;

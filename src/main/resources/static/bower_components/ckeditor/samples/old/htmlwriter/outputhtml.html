@@ -76,7 +76,7 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 					docType: '<!DOCTYPE HTML>',
 
 					/*
-					 * Allowed content rules which beside limiting allowed HTML
+					 * Allowed Content rules which beside limiting allowed HTML
 					 * will also take care of transforming styles to attributes
 					 * (currently only for img - see transformation rules defined below).
 					 *
@@ -150,7 +150,7 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 				});
 
 				/*
-				 * Add missing content transformations.
+				 * Add missing Content transformations.
 				 */
 				function configureTransformations( evt ) {
 					var editor = evt.editor;
@@ -164,7 +164,7 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 						}
 					} );
 
-					// Default automatic content transformations do not yet take care of
+					// Default automatic Content transformations do not yet take care of
 					// align attributes on blocks, so we need to add our own transformation rules.
 					function alignToAttribute( element ) {
 						if ( element.styles[ 'text-align' ] ) {

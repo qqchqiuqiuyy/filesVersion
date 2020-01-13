@@ -4,7 +4,7 @@
 .pln { color: #000 }  /* plain text */
 
 @media screen {
-  .str { color: #080 }  /* string content */
+  .str { color: #080 }  /* string Content */
   .kwd { color: #008 }  /* a keyword */
   .com { color: #800 }  /* a Comment */
   .typ { color: #606 }  /* a type name */

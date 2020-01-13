@@ -49,7 +49,8 @@ public class UserService {
             User user = findUserByAccount(account);
             HttpSession session = request.getSession();
             String id = session.getId();
-            session.setAttribute("account",user.getAccount());
+            session.setAttribute("name",user.getName());
+            session.setAttribute("userId",user.getId());
             session.setMaxInactiveInterval(360000);
             jsonObject.put("success",1);
             jsonObject.put("msg","登录成功!!");
@@ -63,8 +64,8 @@ public class UserService {
         return jsonObject.toString();
     }
 
-    public String register(String account, String password, String repassword) {
-        if("".equals(account)|| "".equals(password)   || "".equals(repassword) ){
+    public String register(String account, String password, String name,String repassword) {
+        if("".equals(account)|| "".equals(password)   || "".equals(repassword) || "".equals(name)){
             jsonObject.put("msg","信息输入不完整不能空白");
             jsonObject.put("success", 0);
             return jsonObject.toString();
@@ -88,8 +89,11 @@ public class UserService {
             userMapper.addRole(user.getId(), 1,"common");
             jsonObject.put("msg","注册成功!!");
             jsonObject.put("success",1);
-        }else{
+        }else if (user.getAccount().equals(account)){
             jsonObject.put("msg","账号已存在请重新输入");
+            jsonObject.put("success",0);
+        } else if (user.getName().equals(name)) {
+            jsonObject.put("msg","昵称已存在请重新输入");
             jsonObject.put("success",0);
         }
         return jsonObject.toString();

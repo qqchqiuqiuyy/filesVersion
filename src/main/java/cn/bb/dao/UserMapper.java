@@ -16,7 +16,7 @@ public interface UserMapper {
     @Select("SELECT roleName FROM userrole WHERE userId = #{id}")
     public List<String> findUserAllRoleByUserId(@Param("id") Integer id);
 
-    @Insert("INSERT INTO users (account, password) VALUES (#{user.account}, #{user.password})")
+    @Insert("INSERT INTO users (account,name, password) VALUES (#{user.account}, #{user.name},#{user.password})")
     @Options(useGeneratedKeys = true, keyProperty = "user.id", keyColumn = "id")
     public void addUser(@Param("user") User user);
 

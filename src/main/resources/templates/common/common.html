@@ -14,14 +14,14 @@
 <div th:fragment="commonHeader" >
   <div class="fly-header layui-bg-black" >
     <div class="layui-container">
-      <span class="logo-lg fly-logo" style="font-size: 36px;top:5px"><b>学习资料</b>分享论坛</span>
+      <span class="logo-lg fly-logo" style="font-size: 36px;top:5px"><b>广工</b>资料分享论坛</span>
 
       <ul class="layui-nav fly-nav-user">
 
         <shiro:hasRole name="common">　　
           <li class="layui-nav-item">
             <a class="fly-nav-avatar" href="javascript:;">
-              <cite class="layui-hide-xs" id="myName" th:text="'欢迎 '+${session.account}"></cite>
+              <cite class="layui-hide-xs" id="myName" th:text="'欢迎 '+${session.name}"></cite>
             </a>
           </li>
 
@@ -50,13 +50,13 @@
   <div class="fly-panel fly-column">
     <div class="layui-container">
       <ul class="layui-clear" style="color: black;font-size: 20px">
-        <li class="layui-hide-xs " id="s1"><a th:href="@{/index/toFile}" style="text-decoration: none">首页</a></li>
+        <li class="layui-hide-xs " id="s1"><a th:href="@{/post/toPost}" style="text-decoration: none">首页</a></li>
         <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
         <shiro:hasRole name="common">　　
           <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block">
-            <a href="jie/add.html" class="layui-btn">发表新帖</a>
+            <a th:href="@{/index/toAddPost}" style="text-decoration: none" class="layui-btn">发表新帖</a>
           </li>
-          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/" style="text-decoration: none">我发表的贴</a></li>
+          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a th:href="@{/index/toMyPost}" style="text-decoration: none">我发表的贴</a></li>
           <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/" style="text-decoration: none">我收藏的贴</a></li>
         </shiro:hasRole>
       </ul>

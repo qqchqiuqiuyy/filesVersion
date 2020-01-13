@@ -1,6 +1,6 @@
 describe "Morris.Hover", ->
 
-  describe "with dummy content", ->
+  describe "with dummy Content", ->
 
     beforeEach ->
       parent = $('<div style="width:200px;height:180px"></div>')
@@ -54,7 +54,7 @@ describe "Morris.Hover", ->
         @element.should.have.css('top', '40px')
 
   describe "#update", ->
-    it "should update content, show and reposition the popup", ->
+    it "should update Content, show and reposition the popup", ->
       hover = new Morris.Hover(parent: $('#test'))
       html = "<div style='width:84px;height:84px'>Hello, Everyone!</div>"
       hover.update(html, 150, 200)

@@ -42,13 +42,13 @@
 <script type="text/javascript">
     $(function(){
 
-      // update content every second
+      // update Content every second
       setInterval(function(){
         var el = $('<div></div>').html('#' + $('#testDiv').children().length)
                 .css({ padding: '3px', border: '1px solid #ccc', margin: '5px' });
         $('#testDiv').append(el);
 
-        // update slimscroll every time content changes
+        // update slimscroll every time Content changes
         $('#testDiv').slimscroll();
       }, 1000);
 

@@ -44,8 +44,9 @@ public class UserController {
     @RequestMapping("/register")
     @ResponseBody
     public String register(@RequestParam("account") String account, @RequestParam("password")String password,
+                           @RequestParam("name") String name,
                            @RequestParam("repassword") String repassword){
-        return userService.register(account, password, repassword);
+        return userService.register(account, password,name, repassword);
     }
 
     @RequestMapping("/toUserList")
@@ -71,6 +72,6 @@ public class UserController {
     public String toLogOut(){
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        return "redirect:/index/toFile";
+        return "redirect:/post/toPost";
     }
 }

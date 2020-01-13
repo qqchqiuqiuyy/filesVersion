@@ -47,5 +47,8 @@ public class IndexController {
         return "pages/fileList";
     }
 
-
+    @RequestMapping("/toAddPost")
+    public String toAddPost(){
+        return "pages/addPost";
+    }
 }

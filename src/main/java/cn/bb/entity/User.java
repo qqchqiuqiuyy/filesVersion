@@ -9,4 +9,5 @@ public class User {
     public Integer id;
     public String password;
     public String account;
+    public String name;
 }
