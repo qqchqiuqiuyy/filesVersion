@@ -28,4 +28,16 @@ public interface UserMapper {
 
     @Insert("INSERT INTO userrole (userId, roleId, roleName) VALUES (#{userId}, #{roleId}, #{roleName})")
     public void GivM(@Param("userId") Integer userId,@Param("roleId") Integer roleId,@Param("roleName") String roleName );
+
+    @Select("SELECT * FROM users WHERE id = #{userId}")
+    public User GetUserById(@Param("userId") Integer userId);
+
+    @Update("UPDATE users SET name = #{username},introduce = #{introduce}  WHERE id = #{userId}")
+    public Integer SetUserMsg(@Param("username") String username,
+                    @Param("introduce")  String introduce,
+                    @Param("userId")  Integer userId);
+
+
+    @Update("UPDATE users SET password = #{pwd} WHERE id = #{userId}")
+    public void SetNewPwd(@Param("userId") Integer id,@Param("pwd") String pwd);
 }

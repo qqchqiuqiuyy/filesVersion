@@ -85,7 +85,7 @@ function login() {
       layer.msg(data.msg);
       if(data.success == '1'){
         console.log("success")
-        window.location.href = '/index/toFile' ;
+        window.location.href = '/post/toPost' ;
       }else if(data.success == '0'){
         $('#errMsg').text(data.msg);
       }
@@ -93,7 +93,6 @@ function login() {
     error:function (data) {
       layer.msg("发生一个错误 请重试")
     }
-
   });
 }
 </script>

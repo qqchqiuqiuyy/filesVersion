@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -69,9 +72,48 @@ public class UserController {
         return userService.GivM(userId);
     }
     @GetMapping("/logout")
-    public String toLogOut(){
+    public String ToLogOut(){
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return "redirect:/post/toPost";
     }
+
+    @RequestMapping("/index")
+    public String ToIndex(HttpServletRequest request,Model model){
+        Map<String, List> stringListMap = userService.GetUserMsg(request);
+        model.addAttribute("posts",stringListMap.get("posts"));
+        model.addAttribute("collections",stringListMap.get("collections"));
+        return "pages/userIndex";
+    }
+    @RequestMapping("/set")
+    public String ToSet(HttpServletRequest request,Model model){
+        HttpSession session = request.getSession();
+        Integer userId = (Integer)session.getAttribute("userId");
+        User user = userService.GetUserById(userId);
+        model.addAttribute("user",user);
+        return "pages/userSet";
+    }
+    @RequestMapping("/setMsg")
+    @ResponseBody
+    public String SetUserMsg(@RequestParam(name = "username") String username
+            ,@RequestParam(name = "introduce") String introduce,HttpServletRequest request){
+        return userService.SetUserMsg(username, introduce, request);
+    }
+
+    @RequestMapping("/setPwd")
+    @ResponseBody
+    public String SetUserPwd(@RequestParam(name = "pass") String pass,
+                             @RequestParam(name = "repass") String repass,HttpServletRequest request){
+        return userService.SetUserPwd(pass,repass, request);
+    }
+
+
+    @RequestMapping("/comment")
+    public String ToMsg(HttpServletRequest request,Model model){
+        Map<String, List> stringListMap = userService.GetUserMsg(request);
+        model.addAttribute("posts",stringListMap.get("posts"));
+        model.addAttribute("collections",stringListMap.get("collections"));
+        return "pages/userComment";
+    }
+
 }

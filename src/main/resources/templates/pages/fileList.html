@@ -28,10 +28,6 @@
                    <button style="display: inline-block" type="submit" class="layui-btn layui-btn-normal" >确认</button>
               </span>
           </div>
-          <!--
-          todo
-            需要替换
-          -->
           <ul class="fly-list" >
             <div th:each="post:${posts}">
                   <li style="padding-bottom: 65px;">
@@ -43,7 +39,7 @@
                       <div class="fly-list-info">
                           <span th:text="${post.postCreatTime}">刚刚</span>
                           <span class="fly-list-nums">
-                            <i class="iconfont icon-pinglun1" title="回答"></i> 66
+                            <i class="iconfont icon-pinglun1" title="回答"></i> <span th:text="${post.commentNums}"></span>
                           </span>
                       </div>
                       <hr style="border: 0;height: 1px;margin-top:10px;background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));" />
@@ -54,7 +50,7 @@
               <!--分页-->
               <div style="margin-top: 40px">
                   <ul class="pagination" >
-                      <li th:class="${indexPage==1}?'disabled' : ''"><a th:href="@{'/post/toPost?indexPage=' + ${indexPage-1}  +'&postName=' + ${postName}  }">&laquo;</a></li>
+                      <li th:class="${indexPage==1}?'disabled' : ''"><a th:class="${indexPage==1}?'disabled' : ''" th:href="@{'/post/toPost?indexPage=' + ${indexPage-1}  +'&postName=' + ${postName}  }">&laquo;</a></li>
                       <li th:if="${indexPage-3 >=1}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage-3}  +'&postName=' + ${postName}   }" th:text="${indexPage -3}" >1</a></li>
                       <li th:if="${indexPage-2 >=1}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage-2}  +'&postName=' + ${postName}     }" th:text="${indexPage -2}" >1</a></li>
                       <li th:if="${indexPage-1 >=1}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage-1}  +'&postName=' + ${postName}   }" th:text="${indexPage -1}" >1</a></li>
@@ -62,7 +58,7 @@
                       <li th:if="${indexPage+1 <=totalPage}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage+1}   +'&postName=' + ${postName}   }" th:text="${indexPage +1}" >1</a></li>
                       <li th:if="${indexPage+2 <=totalPage}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage+2}  +'&postName=' + ${postName}   }" th:text="${indexPage +2}" >1</a></li>
                       <li th:if="${indexPage+3 <=totalPage}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage+3}  +'&postName=' + ${postName}     }" th:text="${indexPage +3}" >1</a></li>
-                      <li th:class="${indexPage==totalPage}?'disabled' : ''" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage+1}   +'&postName=' + ${postName}   }" href="#">&raquo;</a></li>
+                      <li th:class="${indexPage==totalPage}?'disabled' : ''" ><a th:class="${indexPage==totalPage}?'disabled' : ''" th:href="@{'/post/toPost?indexPage=' + ${indexPage+1}   +'&postName=' + ${postName}   }" href="#">&raquo;</a></li>
                   </ul>
               </div>
           </div>
@@ -72,51 +68,13 @@
       <div class="layui-col-md4">
           <dl class="fly-panel fly-list-one">
               <dt class="fly-panel-title">本周热议</dt>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
+              <i th:each="rand:${postRands}">
+                  <dd>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}">基于 layui 的极简社区页面模版</a>
+                      <span ><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
+                  </dd>
+              </i>
 
-              <!-- 无数据时 -->
-              <!--
-              <div class="fly-none">没有相关数据</div>
-              -->
           </dl>
       </div>
 </div>
@@ -129,7 +87,7 @@
 
 layui.config({
   version: "3.0.0",
-  base: './res/mods/'
+  base: '/res/mods/'
 }).extend({
   fly: 'index'
 }).use('fly');

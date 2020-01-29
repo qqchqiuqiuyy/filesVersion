@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+  <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}"></link>
+  <link rel="stylesheet" th:href="@{/res/css/global.css}"></link>
+  <link rel="stylesheet" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}"></link>
+</head>
+<body>
+<script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
+<script th:include="common/common :: script"></script>
+<!---->
+<div th:include="common/common :: commonHeader"></div>
+<!--横-->
+<div th:include="common/common :: navigation"></div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+        <li class="layui-nav-item">
+            <a th:href="@{/user/home}" style="text-decoration: none">
+                <i class="layui-icon">&#xe609;</i>
+                我的主页
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a th:href="@{/user/index}" style="text-decoration: none">
+                <i class="layui-icon">&#xe612;</i>
+                用户中心
+            </a>
+        </li>
+        <li class="layui-nav-item layui-this" >
+            <a th:href="@{/user/comment}" style="text-decoration: none">
+                <i class="layui-icon">&#xe620;</i>
+                基本设置
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a th:href="@{/user/msg}" style="text-decoration: none">
+                <i class="layui-icon">&#xe611;</i>
+                我的消息
+            </a>
+        </li>
+    </ul>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title" id="LAY_mine">
+                <li id="mymsg"  lay-id="info">我的资料</li>
+                <li id="mypwd"  lay-id="pass">密码</li>
+            </ul>
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div class="layui-form layui-form-pane layui-tab-item layui-show">
+                    <form method="post" id="myForm">
+                        <div class="layui-form-item">
+                            <label for="L_username" class="layui-form-label" >昵称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="L_username" name="username" required lay-verify="required" th:value="${user.name}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label for="L_sign" class="layui-form-label">签名</label>
+                            <div class="layui-input-block">
+                                <textarea th:text="${user.introduce}" id="L_sign"  name="introduce" autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" key="set-mine" lay-filter="*" onclick="modify()">确认修改</button>
+
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="layui-form layui-form-pane layui-tab-item">
+                    <form method="post" id="myForm2">
+                        <div class="layui-form-item">
+                            <label for="L_pass" class="layui-form-label">新密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="L_pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="L_repass" class="layui-form-label">确认密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="L_repass" name="repass" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label  id="errMsg" style="color: #FF5722"></label>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" key="set-mine" lay-filter="*" onclick="modify2()">确认修改</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div  th:include="common/common :: footer"></div>
+
+<script th:src="@{/res/layui/layui.js}"></script>
+<script>
+  /*点赞*/
+
+layui.config({
+  version: "3.0.0",
+  base: '/res/mods/'
+}).extend({
+  fly: 'index'
+}).use('fly');
+</script>
+<script type="text/javascript">
+  $(function () {
+    $("#s1").addClass("layui-this");
+    $("#mymsg").addClass("layui-this");
+  });
+
+  function delF(fileId) {
+      $.ajax({
+          url:"/file/delFile/"+fileId,
+          type:"put",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+                $('#bt' + fileId).parent().parent().remove();
+          },
+          error:function (data) {
+              layer.msg("请登录哦~")
+          }
+
+      });
+  }
+
+  function modify() {
+      $.ajax({
+          url:"/user/setMsg",
+          data:$('#myForm').serialize(),
+          type:"post",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+              console.log(data);
+              layer.msg(data.msg);
+              if(data.success == '1'){
+                  alert("修改成功")
+                  window.location.href = '/user/set' ;
+              }else if(data.success == '0'){
+                  $('#errMsg').text(data.msg);
+              }
+          },
+          error:function (data) {
+              layer.msg("发生一个错误 请重试")
+          }
+      });
+  }
+
+  function modify2() {
+      $.ajax({
+          url:"/user/setPwd",
+          data:$('#myForm2').serialize(),
+          type:"post",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+              console.log(data);
+              layer.msg(data.msg);
+              if(data.success == '1'){
+                  alert("修改成功");
+                  window.location.href = '/user/set' ;
+              }else {
+                  alert(data.msg);
+              }
+          },
+          error:function (data) {
+              layer.msg("发生一个错误 请重试")
+          }
+      });
+  }
+</script>
+</body>
+</html>

@@ -35,10 +35,10 @@
 
         <shiro:lacksRole name="common">　　
             <li class="layui-nav-item">
-              <a th:href="@{/user/toLogin}">登入</a>
+              <a th:href="@{/user/toLogin}" style="text-decoration: none">登入</a>
             </li>
             <li class="layui-nav-item">
-              <a th:href="@{/user/toReg}">注册</a>
+              <a th:href="@{/user/toReg}" style="text-decoration: none">注册</a>
             </li>
         </shiro:lacksRole>
       </ul>
@@ -56,8 +56,7 @@
           <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block">
             <a th:href="@{/index/toAddPost}" style="text-decoration: none" class="layui-btn">发表新帖</a>
           </li>
-          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a th:href="@{/index/toMyPost}" style="text-decoration: none">我发表的贴</a></li>
-          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/" style="text-decoration: none">我收藏的贴</a></li>
+          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a th:href="@{/user/index}" style="text-decoration: none">个人中心</a></li>
         </shiro:hasRole>
       </ul>
 

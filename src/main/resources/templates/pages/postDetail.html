@@ -36,15 +36,13 @@
               <hr>
               <span>
                   <a th:href="@{/file/downloadFile/{fileId}(fileId=${post.postId})}" th:download="@{/file/downloadFile/{fileId}(fileId=${post.postId})}" style="color: white;text-decoration: none"  class="layui-btn" >下载</a>
+                  <button class="layui-btn" th:onclick="'collectionF(\'' + ${post.postTitle} + '\',\'' + ${post.postUserId} +'\',\''+${post.postId}+'\')'">收藏</button>
               </span>
-              <span class="jieda-zan" type="zan" style="cursor: pointer;text-decoration: none;margin-left: 20px">
-                        <i class="iconfont icon-zan"></i>
-                        <em th:text="${post.postLike}">0</em>
-              </span>
+
               <div class="fly-detail-info" style="margin-top: -35px">
                   <span class="fly-list-nums">
                     <span class="layui-btn layui-btn-xs jie-admin" type="del" style="margin-top: 7px">删除</span>
-                    <a style="text-decoration: none"><i class="iconfont" title="回答">&#xe60c;</i> <i style="margin-left:-15px" th:text="${contentsNums}"></i> </a>
+                    <span style="display: inline-block;margin-top: 5px"><i class="iconfont" title="回答">&#xe60c;</i> <i style="margin-left:-15px" th:text="${contentsNums}"></i> </a>
                   </span>
               </div>
           </div>
@@ -73,10 +71,10 @@
                       <p th:text="${content.contentMsg}"></p>
                   </div>
                   <div class="jieda-reply">
-                      <span type="reply">
-                <i class="iconfont icon-svgmoban53"></i>
-                回复
-              </span>
+                      <span type="reply" th:onclick="'replyF(\'' + ${content.userName} + '\')'">
+                            <i class="iconfont icon-svgmoban53"></i>
+                            回复
+                     </span>
                       <div class="jieda-admin">
                           <span type="del">删除</span>
                       </div>
@@ -85,7 +83,7 @@
           </ul>
 
           <div class="layui-form layui-form-pane">
-              <form action="/jie/reply/" method="post">
+              <form th:action="@{/post/comment}" method="post">
                   <div class="layui-form-item layui-form-text">
                       <a name="comment"></a>
                       <div class="layui-input-block">
@@ -93,7 +91,9 @@
                       </div>
                   </div>
                   <div class="layui-form-item">
-                      <input type="hidden" name="jid" value="123">
+                      <input type="hidden" name="userId" th:value="${userId}">
+                      <input type="hidden" name="userName" th:value="${userName}">
+                      <input type="hidden" name="postId" th:value="${post.postId}">
                       <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
                   </div>
               </form>
@@ -103,51 +103,13 @@
       <div class="layui-col-md4">
           <dl class="fly-panel fly-list-one">
               <dt class="fly-panel-title">本周热议</dt>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
-              <dd>
-                  <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-                  <span><i class="iconfont icon-pinglun1"></i> 16</span>
-              </dd>
+              <i th:each="rand:${postRands}">
+                  <dd>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}">基于 layui 的极简社区页面模版</a>
+                      <span ><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
+                  </dd>
+              </i>
 
-              <!-- 无数据时 -->
-              <!--
-              <div class="fly-none">没有相关数据</div>
-              -->
           </dl>
       </div>
 </div>
@@ -184,6 +146,29 @@ layui.config({
           }
 
       });
+  }
+    function collectionF(postTitle,postUserId,postId) {
+      console.log(postTitle,postUserId,postId);
+        $.ajax({
+            url:"/post/collectionPost/"+postTitle+"/"+postUserId+"/"+postId,
+            type:"put",
+            dataType:"json",
+            cache:false,
+            success:function(data){//ajax返回的数据
+                if (data.success == 1) {
+                    alert("收藏成功!");
+                } else {
+                    alert("收藏成功!");
+                }
+            },
+            error:function (data) {
+                layer.msg("请登录哦~")
+            }
+
+        });
+    }
+  function replyF(userName) {
+      $("#L_content").text("@" + userName + "  ");
   }
 </script>
 </body>

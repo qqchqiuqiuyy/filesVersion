@@ -55,4 +55,25 @@ public class PostService {
         List<Content> contents = postMapper.GetPostContents(postId);
         return new postAndContent(post,contents);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void PostComment(Integer postId,String userName,Integer userId, String content) {
+        postMapper.PostContent(userId,userName,content,postId);
+        postMapper.PostAddCommentNums(postId);
+    }
+
+    public List<Post> GetPostRand(){
+        List<Post> posts = postMapper.GetPostRand();
+        return posts;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public String CollectPost(String postTitle, Integer postUserId, Integer postId) {
+        if (1 == postMapper.CollectPost(postTitle,postUserId,postId) ) {
+            jsonObject.put("success",1);
+        } else {
+            jsonObject.put("success",0);
+        }
+        return jsonObject.toString();
+    }
 }

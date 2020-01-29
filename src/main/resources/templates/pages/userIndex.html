@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+  <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}"></link>
+  <link rel="stylesheet" th:href="@{/res/css/global.css}"></link>
+  <link rel="stylesheet" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}"></link>
+</head>
+<body>
+<script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
+<script th:include="common/common :: script"></script>
+<!---->
+<div th:include="common/common :: commonHeader"></div>
+<!--横-->
+<div th:include="common/common :: navigation"></div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+        <li class="layui-nav-item">
+            <a th:href="@{/user/home}" style="text-decoration: none">
+                <i class="layui-icon">&#xe609;</i>
+                我的主页
+            </a>
+        </li>
+        <li class="layui-nav-item layui-this">
+            <a th:href="@{/user/index}" style="text-decoration: none">
+                <i class="layui-icon">&#xe612;</i>
+                用户中心
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a th:href="@{/user/set}" style="text-decoration: none">
+                <i class="layui-icon">&#xe620;</i>
+                基本设置
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a th:href="@{/user/comment}" style="text-decoration: none">
+                <i class="layui-icon">&#xe611;</i>
+                我的消息
+            </a>
+        </li>
+    </ul>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+
+    <div class="fly-panel fly-panel-user" pad20>
+        <!--
+        <div class="fly-msg" style="margin-top: 15px;">
+          您的邮箱尚未验证，这比较影响您的帐号安全，<a href="activate.html">立即去激活？</a>
+        </div>
+        -->
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title" id="LAY_mine">
+                <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖</li>
+                <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖</li>
+            </ul>
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <ul class="mine-view jie-row" th:each="post:${posts}">
+                        <li>
+                            <a class="jie-title" th:href="@{/post/toDetail/{postId}(postId=${post.postId})}" target="_blank" th:text="${post.postTitle}">基于 layui 的极简社区页面模版</a>
+                            <i th:text="${post.postCreatTime}">2017/3/14 上午8:30:00</i>
+                            <em th:text="${post.commentNums}+'答'">10答</em>
+                        </li>
+
+                    </ul>
+                    <div id="LAY_page"></div>
+                </div>
+                <div class="layui-tab-item">
+                    <ul class="mine-view jie-row" th:each="collect:${collections}">
+                        <li>
+                            <a class="jie-title" th:href="@{/post/toDetail/{postId}(postId=${collect.postId})}" target="_blank" th:text="${collect.postTitle}">基于 layui 的极简社区页面模版</a>
+                            <i>收藏于<i th:text="${collect.collectTime}"></i></i>  </li>
+                    </ul>
+                    <div id="LAY_page1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div  th:include="common/common :: footer"></div>
+
+<script th:src="@{/res/layui/layui.js}"></script>
+<script>
+  /*点赞*/
+
+layui.config({
+  version: "3.0.0",
+  base: '/res/mods/'
+}).extend({
+  fly: 'index'
+}).use('fly');
+</script>
+<script type="text/javascript">
+  $(function () {
+    $("#s1").addClass("layui-this");
+  });
+
+  function delF(fileId) {
+      $.ajax({
+          url:"/file/delFile/"+fileId,
+          type:"put",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+                $('#bt' + fileId).parent().parent().remove();
+          },
+          error:function (data) {
+              layer.msg("请登录哦~")
+          }
+
+      });
+  }
+</script>
+</body>
+</html>

@@ -15,6 +15,6 @@ public class Post {
     private Timestamp postCreatTime;
     private String path;
     private String postFileName;
-    private Integer postLike;
     private String postContent;
+    private Integer commentNums;
 }
