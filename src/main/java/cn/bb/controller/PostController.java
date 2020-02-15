@@ -27,26 +27,32 @@ public class PostController {
                           @RequestParam(name = "postContent") String postContent,
                           @RequestParam(name = "path") String path,
                           @RequestParam(name = "postFileName") String postFileName,
+                          @RequestParam(name = "collegeValue" ) Integer collegeValue,
+                          @RequestParam(name = "collegeName" ) String collegeName,
                           HttpServletRequest request) {
 
-        return postService.AddPost(postTitle,postContent,request,path,postFileName);
+        return postService.AddPost(postTitle,postContent,request,path,postFileName,collegeValue,collegeName);
     }
     @RequestMapping("/toPost")
     public String toPost(@RequestParam(name = "postTitle", defaultValue = "",required = false)  String postTitle,
                          @RequestParam(name = "indexPage",required = false) Integer indexPage,
-                         Model model) {
+                         @RequestParam(name = "collegeValue",defaultValue = "-1" ,required = false) Integer collegeValue,
+                         Model model,HttpServletRequest request) {
         if (null == indexPage || indexPage < 1) {
             indexPage = 1;
         }
 
-        PageInfo<Post> filePageInfo = postService.GetPostList(postTitle, indexPage);
+        PageInfo<Post> filePageInfo = postService.GetPostList(postTitle, indexPage,collegeValue);
         if (indexPage > filePageInfo.getPages()) {
             indexPage = filePageInfo.getPages();
         }
+        HttpSession session = request.getSession();
+        session.setAttribute("collegeValue",collegeValue);
         model.addAttribute("postRands",postService.GetPostRand());
         model.addAttribute("indexPage",indexPage);
         model.addAttribute("posts",filePageInfo.getList());
         model.addAttribute("totalPage",filePageInfo.getPages());
+        model.addAttribute("colleges",postService.GetAllColleges());
         return "pages/fileList";
     }
     @RequestMapping("/toDetail/{postId}")
@@ -64,10 +70,11 @@ public class PostController {
 
     @RequestMapping("/comment")
     public String CommentPost(@RequestParam(name = "postId") Integer postId,
+                              @RequestParam(name = "postName") String postName,
                               @RequestParam(name = "userName") String userName,
                               @RequestParam(name = "userId") Integer userId,
                               @RequestParam(name = "content") String contenet) {
-        postService.PostComment(postId,userName,userId,contenet);
+        postService.PostComment(postId,postName,userName,userId,contenet);
         return "redirect:/post/toDetail/" + postId;
     }
 

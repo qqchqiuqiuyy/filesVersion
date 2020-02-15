@@ -18,33 +18,54 @@
 <div class="layui-container">
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md8">
-      <div class="fly-panel" >
+      <div class="fly-panel">
           <div class="fly-panel-title fly-filter">
               <span style="font-size: 20px;display: inline-block;margin-right: 20px">帖子列表</span>
               <span>
                   <form class="form-inline layui-form" style="display: inline-block" th:action="@{/post/toPost}" type="post" >
-                        <input type="text"  name="postName"   placeholder="搜索帖子" autocomplete="off" class="layui-input" style="width:150px"/>
+
+                        <div style="float: left;margin-top: -1px;">
+                              <div class="layui-input-inline" style="width:120px">
+                                <select name="collegeValue" >
+                                  <option value="">选择学院</option>
+                                 <span th:each="college:${colleges}">
+                                     <i th:if="${college.collegeValue} == ${session.collegeValue}">
+                                         <option th:value="${college.collegeValue}" th:text="${college.collegeName}" selected="selected" ></option>
+                                     </i>
+                                     <i th:if="${college.collegeValue} != ${session.collegeValue}">
+                                         <option th:value="${college.collegeValue}" th:text="${college.collegeName}" ></option>
+                                     </i>
+                                  </span>
+                                </select>
+                              </div>
+                         </div>
+                        <input type="text"  name="postName"   placeholder="搜索帖子" autocomplete="off" class="layui-input" style="width:150px;display: inline-block"/>
+                        <button style="display: inline-block;margin-left:-2px" type="submit" class="layui-btn layui-btn-normal" >确认</button>
+
                      </form>
-                   <button style="display: inline-block" type="submit" class="layui-btn layui-btn-normal" >确认</button>
               </span>
           </div>
           <ul class="fly-list" >
-            <div th:each="post:${posts}">
-                  <li style="padding-bottom: 65px;">
-                      <h2 style="display: inline-block;padding-top:1px;margin-left: -60px;margin-top:0px;margin-bottom: 0px">
-                          <a class="layui-badge" style="text-decoration: none" >分享</a>
-                          <a th:href="@{/post/toDetail/{postId}(postId=${post.postId})}" style="text-decoration: none;color:black"  th:text="${post.postTitle}"></a>
-                      </h2>
-                      <a  th:href="@{/user/userMessage/{userId}(userId=${post.postId})}" style="text-decoration: none;display:inline-block;color:black;margin-left: 600px" class="fly-avatar" th:text="${post.postUserName}"></a>
-                      <div class="fly-list-info">
-                          <span th:text="${post.postCreatTime}">刚刚</span>
-                          <span class="fly-list-nums">
-                            <i class="iconfont icon-pinglun1" title="回答"></i> <span th:text="${post.commentNums}"></span>
-                          </span>
-                      </div>
-                      <hr style="border: 0;height: 1px;margin-top:10px;background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));" />
-                  </li>
-            </div>
+              <div th:each="post:${posts}">
+              <li style="padding:0 0 0 20px;height: 60px;border-bottom: 2px dotted #e2e2e2;">
+                  <h2 style="padding-top:5px">
+                      <a class="layui-badge" style="text-decoration: none">分享</a>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${post.postId})}" style="text-decoration: none" th:text="${post.postTitle}">基于 layui 的极简社区页面模版</a>
+                  </h2>
+                  <div class="fly-list-info">
+                      <a th:href="@{/user/home/{userId}(userId=${post.postUserId})}" style="text-decoration: none;" link>
+                          <cite th:text="${post.postUserName}">贤心</cite>
+                      </a>
+                      <span th:text="${post.postCreatTime}">2017-11-30</span>
+                      <span class="fly-list-nums">
+                             <i class="iconfont icon-pinglun1" title="回答"></i> <span th:text="${post.commentNums}"></span>
+                        </span>
+                  </div>
+                  <div class="fly-list-badge">
+                  </div>
+              </li>
+          </div>
+
           </ul>
           <div style="text-align: center">
               <!--分页-->
@@ -70,13 +91,14 @@
               <dt class="fly-panel-title">本周热议</dt>
               <i th:each="rand:${postRands}">
                   <dd>
-                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}">基于 layui 的极简社区页面模版</a>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
                       <span ><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
                   </dd>
               </i>
 
           </dl>
       </div>
+</div>
 </div>
 
 <div  th:include="common/common :: footer"></div>
@@ -95,6 +117,7 @@ layui.config({
 <script type="text/javascript">
   $(function () {
     $("#s1").addClass("layui-this");
+    /*  $("#subjectSeb").val("");*/
   });
 
   function delF(fileId) {

@@ -18,7 +18,7 @@
 <div class="layui-container fly-marginTop fly-user-main">
     <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
         <li class="layui-nav-item">
-            <a th:href="@{/user/home}" style="text-decoration: none">
+            <a th:href="@{/user/home/{userId}(userId=${session.userId})}" style="text-decoration: none">
                 <i class="layui-icon">&#xe609;</i>
                 我的主页
             </a>
@@ -36,7 +36,7 @@
             </a>
         </li>
         <li class="layui-nav-item">
-            <a th:href="@{/user/comment}" style="text-decoration: none">
+            <a th:href="@{/user/notify}" style="text-decoration: none">
                 <i class="layui-icon">&#xe611;</i>
                 我的消息
             </a>

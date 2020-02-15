@@ -20,8 +20,8 @@
         <div class="layui-form layui-form-pane">
             <div class="layui-tab layui-tab-brief" lay-filter="user">
                 <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
-                    <div class="layui-tab-item layui-show">
-                        <form action="" method="post">
+                    <div class="layui-tab-item layui-show layui-form" lay-filter="test1">
+                        <form action="" method="post" class="layui-form">
                             <div class="layui-row layui-col-space15 layui-form-item">
                                 <div class="layui-col-md9">
                                     <label for="L_title" class="layui-form-label">标题</label>
@@ -30,16 +30,30 @@
                                     </div>
                                 </div>
                             </div>
+
+                                <div class="layui-input-inline" style="width:250px;margin-bottom:20px">
+                                    <select name="collegeValue" id="collValue">
+                                        <option value="">选择学院</option>
+                                        <span th:each="college:${colleges}">
+                                            <option th:value="${college.collegeValue}" th:text="${college.collegeName}" ></option>
+                                        </span>
+                                    </select>
+                                </div>
+
+
+
                             <div class="layui-form-item layui-form-text">
                                 <div class="layui-input-block">
                                     <textarea id="L_content" name="content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
                                 </div>
                             </div>
 
-                            <div class="fly-panel" style="margin-bottom: 0;">
+                            <div class="fly-panel" style="margin-bottom: 0;" >
                                 <form class="layui-form" action="">
                                     <div class="layui-form-item">
-                                        <div class="layui-input-block" style="margin-left: 0px">
+
+
+                         <div class="layui-input-block" style="margin-left: 0px">
                                             <input type="text" id="fileT" class="layui-input" placeholder="点击上传文件" onclick="clickInput()">
                                             <input type="file" id="file" style="display: none" >
                                         </div>
@@ -51,21 +65,39 @@
                                     </div>
                                 </form>
                             </div>
+
                             <div class="layui-form-item">
                                 <button class="layui-btn" lay-filter="*" lay-submit onclick="addPost()">立即发布</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script th:src="@{/res/layui/layui.js}"></script>
+<script>
 
+    layui.use('form', function(){
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+
+        //……
+
+        //但是，如果你的HTML是动态生成的，自动渲染就会失效
+        //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
+        form.render('select', 'test1');
+    });
+
+
+</script>
 <script type="text/javascript">
     $(function () {
         $(".layui-clear li").eq(2).addClass("layui-this");
+
     });
+
     function getFileName(o){
         var pos=o.lastIndexOf("\\");
         return o.substring(pos+1);
@@ -92,6 +124,8 @@
         formData.append("postContent",$("#L_content").val());
         formData.append("path",path);
         formData.append("postFileName",postFileName);
+        formData.append("collegeValue",$("#collValue").val());
+        formData.append("collegeName",$("#collValue").find("option:selected").text());
         $.ajax({
             url:"/post/addPost",
             type:"POST",

@@ -1,5 +1,8 @@
 package cn.bb.controller;
 
+import cn.bb.entity.Friend;
+import cn.bb.entity.Post;
+import cn.bb.entity.ReplyNotify;
 import cn.bb.entity.User;
 import cn.bb.service.UserService;
 import com.github.pagehelper.PageInfo;
@@ -26,13 +29,15 @@ public class UserController {
     UserService userService;
     @Autowired
     JSONObject jsonObject;
+
     @RequestMapping("/toLogin")
     public String toLogin() {
         return "pages/login";
     }
 
     @RequestMapping("/toReg")
-    public String toReg() {
+    public String toReg(Model model) {
+        model.addAttribute("colleges",userService.GetAllColleges());
         return "pages/reg";
     }
 
@@ -48,8 +53,11 @@ public class UserController {
     @ResponseBody
     public String register(@RequestParam("account") String account, @RequestParam("password")String password,
                            @RequestParam("name") String name,
-                           @RequestParam("repassword") String repassword){
-        return userService.register(account, password,name, repassword);
+                           @RequestParam("repassword") String repassword,
+                           @RequestParam("sex") String sex,
+                           @RequestParam("collegeValue") Integer collegeValue,
+                           @RequestParam("collegeName") String collegeName){
+        return userService.register(account, password,name, repassword,sex,collegeValue,collegeName);
     }
 
     @RequestMapping("/toUserList")
@@ -107,13 +115,40 @@ public class UserController {
         return userService.SetUserPwd(pass,repass, request);
     }
 
-
-    @RequestMapping("/comment")
-    public String ToMsg(HttpServletRequest request,Model model){
-        Map<String, List> stringListMap = userService.GetUserMsg(request);
-        model.addAttribute("posts",stringListMap.get("posts"));
-        model.addAttribute("collections",stringListMap.get("collections"));
-        return "pages/userComment";
+    @RequestMapping("/home/{userId}")
+    public String ToUserHome(@PathVariable(name = "userId") Integer userId,Model model){
+        Map<String, Object> map = userService.ToUserHome(userId);
+        model.addAttribute("user",(User)map.get("user"));
+        model.addAttribute("posts",(List<Post>)map.get("posts"));
+        model.addAttribute("friends",(List<Friend>)map.get("friends"));
+        return "pages/userHome";
     }
 
+    @RequestMapping("/notify")
+    public String ToNotify(HttpServletRequest request,Model model){
+        List<ReplyNotify> replyNotifies = userService.GetNotify(request);
+        model.addAttribute("notifies",replyNotifies);
+        return "pages/userNotify";
+    }
+
+
+    @RequestMapping("/delNotify/{notifyId}")
+    @ResponseBody
+    public String DelNotify(@PathVariable(name = "notifyId") Integer notifyId){
+        return userService.DelNotify(notifyId);
+    }
+
+    @RequestMapping("/delAllNotify/{userId}")
+    @ResponseBody
+    public String DelAllNotify(@PathVariable(name = "userId") Integer userId){
+        return userService.DelAllNotify(userId);
+    }
+
+    @RequestMapping("/addFriend/{friendId}/{friendName}/{userId}")
+    @ResponseBody
+    public String AddFriend(@PathVariable(name = "friendId") Integer friendId,
+                            @PathVariable(name = "friendName") String friendName,
+                            @PathVariable(name = "userId") Integer userId){
+        return userService.AddFriend(friendId,friendName,userId);
+    }
 }

@@ -23,7 +23,7 @@
 
           <div class="detail-about">
               <div class="fly-detail-user" style="margin-left:-60px">
-                  <a th:href="@{user/userMsg/{userId}(userId=${post.postUserId})}" class="fly-link">
+                  <a th:href="@{/user/home/{userId}(userId=${post.postUserId})}" class="fly-link">
                       <cite th:text="${post.postUserName}"></cite>
                   </a>
                   <span th:text="${post.postCreatTime}"></span>
@@ -41,7 +41,7 @@
 
               <div class="fly-detail-info" style="margin-top: -35px">
                   <span class="fly-list-nums">
-                    <span class="layui-btn layui-btn-xs jie-admin" type="del" style="margin-top: 7px">删除</span>
+                    <!--<span class="layui-btn layui-btn-xs jie-admin" type="del" style="margin-top: 7px">删除</span>-->
                     <span style="display: inline-block;margin-top: 5px"><i class="iconfont" title="回答">&#xe60c;</i> <i style="margin-left:-15px" th:text="${contentsNums}"></i> </a>
                   </span>
               </div>
@@ -53,33 +53,40 @@
               <legend>回帖</legend>
           </fieldset>
 
-          <ul class="jieda" id="jieda" th:each="content:${contents}">
-              <li data-id="111" class="jieda-daan">
-                  <a name="item-1111111111"></a>
-                  <div class="detail-about detail-about-reply" style="margin-left: -60px">
-                      <div class="fly-detail-user">
-                          <a href="" class="fly-link">
-                              <cite th:text="${content.userName}"></cite>
-                          </a>
-                      </div>
+          <ul class="jieda" id="jieda" >
+              <div th:each="content:${contents}">
+                  <li data-id="111" class="jieda-daan" style="border-bottom: 2px dotted #e2e2e2;">
+                      <a name="item-1111111111"></a>
+                      <div class="detail-about detail-about-reply" style="margin-left: -60px">
+                          <div class="fly-detail-user">
+                              <a th:href="@{/user/home/{userId}(userId=${content.userId})}" class="fly-link">
+                                  <cite th:text="${content.userName}"></cite>
+                              </a>
+                              <span style="display: inline-block; float: right">
+                                 <i th:text="'# ' +${contentStat.index+1}"></i>
+                              </span>
+                          </div>
 
-                      <div class="detail-hits">
-                          <span th:text="${content.contentTime}"></span>
+                          <div class="detail-hits">
+                              <span th:text="${content.contentTime}"></span>
+                          </div>
                       </div>
-                  </div>
-                  <div class="detail-body jieda-body photos">
-                      <p th:text="${content.contentMsg}"></p>
-                  </div>
-                  <div class="jieda-reply">
-                      <span type="reply" th:onclick="'replyF(\'' + ${content.userName} + '\')'">
-                            <i class="iconfont icon-svgmoban53"></i>
-                            回复
-                     </span>
-                      <div class="jieda-admin">
-                          <span type="del">删除</span>
+                      <div class="detail-body jieda-body photos">
+                          <p th:text="${content.contentMsg}"></p>
                       </div>
-                  </div>
-              </li>
+                      <div class="jieda-reply">
+                          <shiro:hasRole name="common">　　
+                          <span type="reply" style="margin-left:-35px" th:onclick="'replyF(\'' + ${content.userName} + '\')'">
+                                <i class="iconfont icon-svgmoban53"></i>
+                                回复
+                         </span>
+                          </shiro:hasRole>
+                         <!-- <div class="jieda-admin">
+                              <span type="del">删除</span>
+                          </div>-->
+                      </div>
+                  </li>
+              </div>
           </ul>
 
           <div class="layui-form layui-form-pane">
@@ -94,6 +101,7 @@
                       <input type="hidden" name="userId" th:value="${userId}">
                       <input type="hidden" name="userName" th:value="${userName}">
                       <input type="hidden" name="postId" th:value="${post.postId}">
+                      <input type="hidden" name="postName" th:value="${post.postTitle}">
                       <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
                   </div>
               </form>
@@ -105,7 +113,7 @@
               <dt class="fly-panel-title">本周热议</dt>
               <i th:each="rand:${postRands}">
                   <dd>
-                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}">基于 layui 的极简社区页面模版</a>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
                       <span ><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
                   </dd>
               </i>

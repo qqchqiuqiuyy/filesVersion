@@ -30,6 +30,13 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">将会成为您唯一的登入名</div>
               </div>
+
+              <div class="layui-form-item">
+                <label for="L_name" class="layui-form-label">昵称</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="L_name" name="name" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+              </div>
               <div class="layui-form-item">
                 <label for="L_pass" class="layui-form-label">密码</label>
                 <div class="layui-input-inline">
@@ -38,22 +45,33 @@
                 <div class="layui-form-mid layui-word-aux">6到16个字符</div>
               </div>
               <div class="layui-form-item">
-                <label for="L_name" class="layui-form-label">昵称</label>
-                <div class="layui-input-inline">
-                  <input type="text" id="L_name" name="name" required lay-verify="required" autocomplete="off" class="layui-input">
-                </div>
-              </div>
-              <div class="layui-form-item">
                 <label for="L_repass" class="layui-form-label">确认密码</label>
                 <div class="layui-input-inline">
                   <input type="password" id="L_repass" name="repassword" required lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
               </div>
+              <div class="layui-input-inline" style="width:120px">
+              <select name="sex" id="sexx"  >
+                <option value="">性别</option>
+                <option value="1">男</option>
+                <option value="0" >女</option>
+              </select>
+            </div>
+              <div class="layui-input-inline" style="width:120px">
+                 <select name="collegeValue"  id="collValue"  >
+                  <option value="">选择学院</option>
+                   <span th:each="col:${colleges}">
+                     <option th:value="${col.collegeValue}" th:text="${col.collegeName}"></option>
+                   </span>
+                </select>
+              </div>
               <div class="layui-form-item">
                 <label  id="errMsg" style="color: #FF5722"></label>
               </div>
               <div class="layui-form-item">
-                <button class="layui-btn" type="button" id="submit" onclick="reg()"  >立即注册</button>
+                <input type="text" id="check" style="width: 230px;display:inline-block;margin-bottom:20px" name="checkC"  placeholder="请输入验证码（不区分大小写）" autocomplete="off" class="input-val layui-input">
+                <canvas id="canvas" style="width: 120px;height:38px"></canvas>
+                <button class="layui-btn" style="display: block;" type="button" id="submit"   >立即注册</button>
               </div>
             </form>
           </div>
@@ -86,15 +104,26 @@ layui.config({
 }).use('fly');
 </script>
 <script>
+
+
   function reg() {
-    console.log("submit!!")
-    console.log($('#dataFrom').serialize());
+
+      var formData = new FormData();
+      formData.append("collegeValue",$("#collValue").val());
+      formData.append("collegeName",$("#collValue").find("option:selected").text());
+      formData.append("account",$("#L_account").val());
+      formData.append("name",$("#L_name").val());
+      formData.append("password",$("#L_pass").val());
+      formData.append("repassword",$("#L_repass").val());
+      formData.append("sex",$("#sexx").find("option:selected").text());
     $.ajax({
       url:"/user/register",
-      data:$('#dataFrom').serialize(),
+      data:formData,
       type:"post",
       dataType:"json",
       cache:false,
+        contentType: false,
+        processData: false,
       success:function(data){//ajax返回的数据
           console.log("successss");
           layer.msg(data.msg);
@@ -111,6 +140,88 @@ layui.config({
 
     });
   }
+
+  $(function(){
+      var show_num = [];
+      draw(show_num);
+
+      $("#canvas").on('click',function(){
+          draw(show_num);
+      })
+      $("#submit").on('click',function(){
+          var val = $(".input-val").val().toLowerCase();
+          var num = show_num.join("");
+          if(val==''){
+              layer.msg('请输入验证码！');
+          }else if(val == num){
+              layer.msg("注册成功!");
+              $(".input-val").val('');
+              reg();
+              draw(show_num);
+
+          }else{
+              layer.msg('验证码错误！请重新输入！');
+              $(".input-val").val('');
+              draw(show_num);
+          }
+      })
+  })
+
+  function draw(show_num) {
+      var canvas_width=$('#canvas').width();
+      var canvas_height=$('#canvas').height();
+      var canvas = document.getElementById("canvas");//获取到canvas的对象，演员
+      var context = canvas.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
+      canvas.width = canvas_width;
+      canvas.height = canvas_height;
+      var sCode = "A,B,C,E,F,G,H,J,K,L,M,N,P,Q,R,S,T,W,X,Y,Z,1,2,3,4,5,6,7,8,9,0";
+      var aCode = sCode.split(",");
+      var aLength = aCode.length;//获取到数组的长度
+
+      for (var i = 0; i <= 3; i++) {
+          var j = Math.floor(Math.random() * aLength);//获取到随机的索引值
+          var deg = Math.random() * 30 * Math.PI / 180;//产生0~30之间的随机弧度
+          var txt = aCode[j];//得到随机的一个内容
+          show_num[i] = txt.toLowerCase();
+          var x = 10 + i * 20;//文字在canvas上的x坐标
+          var y = 20 + Math.random() * 8;//文字在canvas上的y坐标
+          context.font = "bold 23px 微软雅黑";
+
+          context.translate(x, y);
+          context.rotate(deg);
+
+          context.fillStyle = randomColor();
+          context.fillText(txt, 0, 0);
+
+          context.rotate(-deg);
+          context.translate(-x, -y);
+      }
+      for (var i = 0; i <= 5; i++) { //验证码上显示线条
+          context.strokeStyle = randomColor();
+          context.beginPath();
+          context.moveTo(Math.random() * canvas_width, Math.random() * canvas_height);
+          context.lineTo(Math.random() * canvas_width, Math.random() * canvas_height);
+          context.stroke();
+      }
+      for (var i = 0; i <= 30; i++) { //验证码上显示小点
+          context.strokeStyle = randomColor();
+          context.beginPath();
+          var x = Math.random() * canvas_width;
+          var y = Math.random() * canvas_height;
+          context.moveTo(x, y);
+          context.lineTo(x + 1, y + 1);
+          context.stroke();
+      }
+  }
+
+  function randomColor() {//得到随机的颜色值
+      var r = Math.floor(Math.random() * 256);
+      var g = Math.floor(Math.random() * 256);
+      var b = Math.floor(Math.random() * 256);
+      return "rgb(" + r + "," + g + "," + b + ")";
+  }
+
+
 </script>
 </body>
 </html>

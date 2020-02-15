@@ -20,18 +20,7 @@ public class IndexController {
     FileService fileService;
     @Autowired
     PostService postService;
-    @RequestMapping("/postList")
-    public String GoIndexList(@RequestParam(name = "postName", defaultValue = "", required = false) String postName,
-                            @RequestParam(name = "indexPage",required = false) Integer indexPage,
-                            Model model) {
-        if (null == indexPage || indexPage < 1) {
-            indexPage = 1;
-        }
-        PageInfo<Post> postPageInfo = postService.GetPostList(postName, indexPage);
-        model.addAttribute("indexPage",indexPage);
-        model.addAttribute("posts",postPageInfo.getList());
-        return "pages/postList";
-    }
+
 
 
     @RequestMapping("/toFile")
@@ -48,7 +37,8 @@ public class IndexController {
     }
 
     @RequestMapping("/toAddPost")
-    public String toAddPost(){
+    public String toAddPost(Model model){
+        model.addAttribute("colleges",postService.GetAllColleges());
         return "pages/addPost";
     }
 }

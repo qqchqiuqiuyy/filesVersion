@@ -29,13 +29,13 @@
                 用户中心
             </a>
         </li>
-        <li class="layui-nav-item layui-this" >
+        <li class="layui-nav-item " >
             <a th:href="@{/user/set}" style="text-decoration: none">
                 <i class="layui-icon">&#xe620;</i>
                 基本设置
             </a>
         </li>
-        <li class="layui-nav-item">
+        <li class="layui-nav-item layui-this">
             <a th:href="@{/user/notify}" style="text-decoration: none">
                 <i class="layui-icon">&#xe611;</i>
                 我的消息
@@ -53,64 +53,26 @@
     </div>
     <div class="site-mobile-shade"></div>
 
-
     <div class="fly-panel fly-panel-user" pad20>
-        <div class="layui-tab layui-tab-brief" lay-filter="user">
-            <ul class="layui-tab-title" id="LAY_mine">
-                <li id="mymsg"  lay-id="info">我的资料</li>
-                <li id="mypwd"  lay-id="pass">密码</li>
-            </ul>
-            <div class="layui-tab-content" style="padding: 20px 0;">
-                <div class="layui-form layui-form-pane layui-tab-item layui-show">
-                    <form method="post" id="myForm">
-                        <div class="layui-form-item">
-                            <label for="L_username" class="layui-form-label" >昵称</label>
-                            <div class="layui-input-inline">
-                                <input type="text" id="L_username" name="username" required lay-verify="required" th:value="${user.name}" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item layui-form-text">
-                            <label for="L_sign" class="layui-form-label">签名</label>
-                            <div class="layui-input-block">
-                                <textarea th:text="${user.introduce}" id="L_sign"  name="introduce" autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <button class="layui-btn" key="set-mine" lay-filter="*" onclick="modify()">确认修改</button>
-
-                        </div>
-                    </form>
-                </div>
-
-
-                <div class="layui-form layui-form-pane layui-tab-item">
-                    <form method="post" id="myForm2">
-                        <div class="layui-form-item">
-                            <label for="L_pass" class="layui-form-label">新密码</label>
-                            <div class="layui-input-inline">
-                                <input type="password" id="L_pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-form-mid layui-word-aux">6到16个字符</div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label for="L_repass" class="layui-form-label">确认密码</label>
-                            <div class="layui-input-inline">
-                                <input type="password" id="L_repass" name="repass" required lay-verify="required" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label  id="errMsg" style="color: #FF5722"></label>
-                        </div>
-                        <div class="layui-form-item">
-                            <button class="layui-btn" key="set-mine" lay-filter="*" onclick="modify2()">确认修改</button>
-                        </div>
-                    </form>
-                </div>
-
+        <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;">
+            <button class="layui-btn layui-btn-danger" id="LAY_delallmsg" th:onclick="'delAllNotify(\'' + ${session.userId} + '\')'">清空全部消息</button>
+            <div  id="LAY_minemsg" style="margin-top: 10px;">
+                <!--<div class="fly-none">您暂时没有最新消息</div>-->
+                <ul class="mine-msg" id="allNotify">
+                    <div th:each="notify:${notifies}">
+                        <li th:id="'not'+${notify.id}">
+                            <blockquote class="layui-elem-quote">
+                                <a th:href="@{/user/home/{userId}(userId=${notify.replyUserId})}" target="_blank"><cite th:text="${notify.replyUserName}">Absolutely</cite></a>回答了您在<a target="_blank" th:href="@{/post/toDetail/{postId}(postId=${notify.replyPostId})}"><cite th:text="${notify.replyPostName} + '的回帖'">layui后台框架</cite></a>
+                            </blockquote>
+                            <p><span th:text="${notify.replyTime}">1小时前</span><button th:onclick="'delNotify(\'' + ${notify.id} + '\')'" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</button></p>
+                        </li>
+                    </div>
+                </ul>
             </div>
-
         </div>
     </div>
+
+
 </div>
 
 <div  th:include="common/common :: footer"></div>
@@ -191,6 +153,38 @@ layui.config({
           error:function (data) {
               layer.msg("发生一个错误 请重试")
           }
+      });
+  }
+
+  function delNotify(notifyId) {
+      $.ajax({
+          url:"/user/delNotify/"+notifyId,
+          type:"put",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+              $('#not' + notifyId).remove();
+          },
+          error:function (data) {
+              layer.msg("请登录哦~")
+          }
+
+      });
+  }
+
+  function delAllNotify(userId) {
+      $.ajax({
+          url:"/user/delAllNotify/"+userId,
+          type:"put",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+              $("#allNotify").remove();
+          },
+          error:function (data) {
+              layer.msg("请登录哦~")
+          }
+
       });
   }
 </script>

@@ -68,7 +68,7 @@ public class UserService {
         return jsonObject.toString();
     }
 
-    public String register(String account, String password, String name,String repassword) {
+    public String register(String account, String password, String name,String repassword,String sex,Integer collegeValue,String collegeName) {
         if("".equals(account)|| "".equals(password)   || "".equals(repassword) || "".equals(name)){
             jsonObject.put("msg","信息输入不完整不能空白");
             jsonObject.put("success", 0);
@@ -79,14 +79,17 @@ public class UserService {
             jsonObject.put("success",0);
             return jsonObject.toString();
         }
-        User user = findUserByAccount(account);
+        User user = findUserByAccountAndName(account,name);
         if(null == user){
             user = new User();
             //用户名加盐  MD5加密输入进来的密码
             Md5Hash pwd = new Md5Hash(password, ByteSource.Util.bytes(account));
             user.setAccount(account);
             user.setPassword(pwd.toString());
-
+            user.setName(name);
+            user.setSex(sex);
+            user.setCollegeName(collegeName);
+            user.setCollegeValue(collegeValue);
             //存入数据库
             userMapper.addUser(user);
             //新增用户给予user:common角色
@@ -109,7 +112,9 @@ public class UserService {
     public User findUserByAccount(String account) {
         return userMapper.GetUserByAccount(account);
     }
-
+    public User findUserByAccountAndName(String account,String name) {
+        return userMapper.GetUserByAccountAndName(account, name);
+    }
 
     public PageInfo<User> GetUserList(String account, Integer pageIndex) {
         if (pageIndex == null || pageIndex < 1) {
@@ -149,6 +154,12 @@ public class UserService {
     public String SetUserMsg(String username, String introduce, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer userId = (Integer)session.getAttribute("userId");
+        User user = userMapper.GetUserByName(username);
+        if (user != null) {
+            jsonObject.put("success","0");
+            jsonObject.put("msg","该名称已存在,请更换");
+            return jsonObject.toString();
+        }
         userMapper.SetUserMsg(username,introduce,userId) ;
         jsonObject.put("success","1");
         session.setAttribute("name",username);
@@ -174,5 +185,49 @@ public class UserService {
         userMapper.SetNewPwd(user.getId(),pwd.toString());
         jsonObject.put("success",1);
         return jsonObject.toString();
+    }
+
+    public Map<String,Object> ToUserHome(Integer userId) {
+        User user = userMapper.GetUserById(userId);
+        List<Post> posts = postMapper.GetUserPost(userId);
+        List<Friend> friends = postMapper.GetUserFriends(userId);
+        HashMap<String, Object> stringObjectHashMap = new HashMap<>();
+        stringObjectHashMap.put("user",user);
+        stringObjectHashMap.put("posts",posts);
+        stringObjectHashMap.put("friends",friends);
+        return stringObjectHashMap;
+    }
+
+    public List<ReplyNotify> GetNotify(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer)session.getAttribute("userId");
+        return  userMapper.GetNotify(userId);
+
+    }
+
+    public String DelNotify(Integer notifyId) {
+        userMapper.DelNotify(notifyId);
+        return jsonObject.put("success","1").toString();
+    }
+
+    public String DelAllNotify(Integer userId) {
+        userMapper.DelAllNotify(userId);
+        return jsonObject.put("success","1").toString();
+    }
+
+
+    public String AddFriend(Integer friendId, String friendName, Integer userId) {
+        if (friendId != userId && null == userMapper.GetFiend(friendId,userId)) {
+            userMapper.AddFriend(friendId,friendName,userId);
+            jsonObject.put("success","1");
+        } else {
+            jsonObject.put("success","0");
+        }
+
+        return jsonObject.toString();
+    }
+
+    public List<College> GetAllColleges(){
+        return userMapper.GetAllColleges();
     }
 }

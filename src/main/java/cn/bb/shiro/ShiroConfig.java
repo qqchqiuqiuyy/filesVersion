@@ -41,6 +41,14 @@ public class ShiroConfig {
         Map<String,String> filterMap = new LinkedHashMap<>();
         filterMap.put("/static/**", "anon");
         //登录注册放行
+        filterMap.put("/user/index","authc");
+        filterMap.put("/user/set","authc");
+        filterMap.put("/user/notify","authc");
+        filterMap.put("/user/addFriend/**","authc");
+        filterMap.put("/index/toAddPost","authc");
+        filterMap.put("/post/collectionPost/**","authc");
+        filterMap.put("/**","anon");
+        filterMap.put("/**","anon");
         filterMap.put("/**","anon");
 
 

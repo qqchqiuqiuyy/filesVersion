@@ -2,8 +2,8 @@ package cn.bb.service;
 
 import cn.bb.common.Page;
 import cn.bb.dao.PostMapper;
-import cn.bb.entity.Post;
-import cn.bb.entity.Content;
+import cn.bb.dao.UserMapper;
+import cn.bb.entity.*;
 import cn.bb.vo.postAndContent;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -20,11 +20,13 @@ public class PostService {
 
     @Autowired
     PostMapper postMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     JSONObject jsonObject;
 
-    public PageInfo<Post> GetPostList(String postTitle, Integer pageIndex) {
+    public PageInfo<Post> GetPostList(String postTitle, Integer pageIndex,Integer subjectValue) {
         if (pageIndex == null || pageIndex < 1) {
             pageIndex = 1;
         }
@@ -32,20 +34,29 @@ public class PostService {
             postTitle = "";
         }
         PageHelper.startPage(pageIndex, Page.PAGE_SIZE);
-        return new PageInfo<>(postMapper.GetPostList(postTitle));
+        if (subjectValue == -1) {
+            return new PageInfo<>(postMapper.GetPostList2(postTitle,subjectValue));
+        }
+
+        return new PageInfo<>(postMapper.GetPostList(postTitle,subjectValue));
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String AddPost(String postTitle, String postContent, HttpServletRequest request,String path,String postFileName){
+    public String AddPost(String postTitle, String postContent, HttpServletRequest request,String path,String postFileName,Integer collegeValue,String collegeName){
         String userName = (String)request.getSession().getAttribute("name");
         Integer userId = (Integer)request.getSession().getAttribute("userId");
-        try {
-            postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName);
-            jsonObject.put("success",1);
-            jsonObject.put("successUrl","/index/toFile");
-        }catch (Exception ex) {
+        if (postTitle == "" || postContent == "" || collegeValue == null ) {
             jsonObject.put("success",0);
+        } else {
+            try {
+                postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName,collegeValue,collegeName);
+                jsonObject.put("success",1);
+                jsonObject.put("successUrl","/post/toPost");
+            }catch (Exception ex) {
+                jsonObject.put("success",0);
+            }
         }
+
         return jsonObject.toString();
     }
 
@@ -57,8 +68,15 @@ public class PostService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void PostComment(Integer postId,String userName,Integer userId, String content) {
-        postMapper.PostContent(userId,userName,content,postId);
+    public void PostComment(Integer postId,String postName,String replyUserName,Integer replyUserId, String content) {
+        if (content.charAt(0) == '@' && content.indexOf(" ") != -1) {
+            String name = content.substring(1, content.indexOf(" "));
+            User user = userMapper.GetUserByName(name);
+            if (null != user) {
+                postMapper.AddNotify(user.getName(),user.getId(),postId,postName,replyUserId,replyUserName);
+            }
+        }
+        postMapper.PostContent(replyUserId,replyUserName,content,postId);
         postMapper.PostAddCommentNums(postId);
     }
 
@@ -75,5 +93,9 @@ public class PostService {
             jsonObject.put("success",0);
         }
         return jsonObject.toString();
+    }
+
+    public List<College> GetAllColleges(){
+        return postMapper.GetAllColleges();
     }
 }

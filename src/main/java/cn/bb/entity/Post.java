@@ -17,4 +17,6 @@ public class Post {
     private String postFileName;
     private String postContent;
     private Integer commentNums;
+    private String collegeName;
+    private Integer collegeValue;
 }
