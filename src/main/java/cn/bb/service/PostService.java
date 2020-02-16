@@ -49,9 +49,10 @@ public class PostService {
             jsonObject.put("success",0);
         } else {
             try {
-                postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName,collegeValue,collegeName);
+                Post GetId = new Post();
+                postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName,collegeValue,collegeName,GetId);
                 jsonObject.put("success",1);
-                jsonObject.put("successUrl","/post/toPost");
+                jsonObject.put("successUrl","/post/toDetail/" + GetId.getPostId());
             }catch (Exception ex) {
                 jsonObject.put("success",0);
             }
@@ -97,5 +98,32 @@ public class PostService {
 
     public List<College> GetAllColleges(){
         return postMapper.GetAllColleges();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public String DelPost(Integer postId) {
+        try {
+            postMapper.DelCollections(postId);
+            postMapper.DelContents(postId);
+            postMapper.DelPost(postId);
+            postMapper.DelReplyNotify(postId);
+            jsonObject.put("success","1");
+
+        }catch (Exception ex) {
+            jsonObject.put("success","0");
+            System.out.println(ex.getMessage());
+        }
+        return jsonObject.toString();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public String DelContent(Integer contentId) {
+        try {
+            postMapper.DelContentByContentId(contentId);
+            jsonObject.put("success","1");
+        } catch (Exception ex) {
+            jsonObject.put("success","0");
+        }
+        return jsonObject.toString();
     }
 }

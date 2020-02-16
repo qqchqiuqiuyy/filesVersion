@@ -20,12 +20,13 @@ public interface PostMapper {
 
     @Insert("INSERT INTO posts (postTitle, postUserName, postUserId, postContent, path, postFileName,collegeValue, collegeName  ) VALUES" +
             "   (#{postTitle}, #{postUserName}, #{postUserId}, #{postContent}, #{path}, #{postFileName}, #{collegeValue}, #{collegeName})")
-    public void AddPost(@Param("postTitle") String postTitle,@Param("postContent") String postContent,
+    @Options(useGeneratedKeys = true, keyProperty = "po.postId", keyColumn = "postId")
+    public Integer AddPost(@Param("postTitle") String postTitle,@Param("postContent") String postContent,
                         @Param("postUserId") Integer postUserId,@Param("postUserName") String postUserName,
                         @Param("path") String path,
                         @Param("postFileName") String postFileName,
                         @Param("collegeValue") Integer collegeValue,
-                        @Param("collegeName") String collegeName);
+                        @Param("collegeName") String collegeName,@Param("po") Post returnId);
 
     @Select("SELECT * FROM posts WHERE postId = #{postId}")
     public Post GetPostMsg(@Param("postId") Integer postId);
@@ -68,4 +69,19 @@ public interface PostMapper {
 
     @Select("SELECT * FROM colleges ")
     public List<College> GetAllColleges();
+
+    @Delete("DELETE FROM collections WHERE postId = #{postId}")
+    public Integer DelCollections(@Param("postId") Integer postId);
+
+    @Delete("DELETE FROM contents WHERE postId = #{postId}")
+    public Integer DelContents(@Param("postId") Integer postId);
+
+    @Delete("DELETE FROM posts WHERE postId = #{postId}")
+    public Integer DelPost(@Param("postId") Integer postId);
+
+    @Delete("DELETE FROM replynotify WHERE replyPostId = #{postId}")
+    public Integer DelReplyNotify(@Param("postId") Integer postId);
+
+    @Delete("DELETE FROM contents WHERE contentId = #{contentId}")
+    void DelContentByContentId(@Param("contentId") Integer contentId);
 }

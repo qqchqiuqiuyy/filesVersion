@@ -92,7 +92,7 @@
               <i th:each="rand:${postRands}">
                   <dd>
                       <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
-                      <span ><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
+                      <span style="display: block;float: right;"><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
                   </dd>
               </i>
 

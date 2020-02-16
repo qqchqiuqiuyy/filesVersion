@@ -19,24 +19,35 @@
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md8 content detail">
       <div class="fly-panel detail-box">
-          <h1 th:text="${post.postTitle}"></h1>
+          <h1 style="font-size: 50px;line-height: 150%;padding: 0 0 5px 5px;font-weight: 700;    color: #2965b1;" th:text="${post.postTitle}"></h1>
 
           <div class="detail-about">
-              <div class="fly-detail-user" style="margin-left:-60px">
-                  <a th:href="@{/user/home/{userId}(userId=${post.postUserId})}" class="fly-link">
+              <div class="fly-detail-user" style="margin-left:-60px;font-size: 15px">
+                  <span  >楼主</span>
+                  <a style="text-decoration: none" th:href="@{/user/home/{userId}(userId=${post.postUserId})}" class="fly-link">
                       <cite th:text="${post.postUserName}"></cite>
                   </a>
                   <span th:text="${post.postCreatTime}"></span>
               </div>
           </div>
 
-          <div class="detail-body photos">
-              <p th:text="${post.postContent}"></p>
+          <div class="detail-body photos" style="font-size: 20px">
+              <div class="layui-tab layui-tab-card">
+                  <div class="layui-tab-content" >
+                      <div class="layui-tab-item layui-show"> <p th:text="${post.postContent}" style="display: block;"></p></div>
+                  </div>
+              </div>
+
 
               <hr>
               <span>
                   <a th:href="@{/file/downloadFile/{fileId}(fileId=${post.postId})}" th:download="@{/file/downloadFile/{fileId}(fileId=${post.postId})}" style="color: white;text-decoration: none"  class="layui-btn" >下载</a>
                   <button class="layui-btn" th:onclick="'collectionF(\'' + ${post.postTitle} + '\',\'' + ${post.postUserId} +'\',\''+${post.postId}+'\')'">收藏</button>
+                   <shiro:hasRole name="common">　　
+                          <i th:if="${session.userId} == ${post.postUserId}">
+                             <button type="button" style="margin-left:-20px" class="layui-btn layui-btn-danger" th:onclick="'delPost(\'' + ${post.postId} + '\')'">删除</button>
+                          </i>
+                   </shiro:hasRole>　　
               </span>
 
               <div class="fly-detail-info" style="margin-top: -35px">
@@ -50,7 +61,7 @@
 
       <div class="fly-panel detail-box" id="flyReply">
           <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
-              <legend>回帖</legend>
+              <legend style="font-size: 30px;font-weight: 700">回帖</legend>
           </fieldset>
 
           <ul class="jieda" id="jieda" >
@@ -58,39 +69,42 @@
                   <li data-id="111" class="jieda-daan" style="border-bottom: 2px dotted #e2e2e2;">
                       <a name="item-1111111111"></a>
                       <div class="detail-about detail-about-reply" style="margin-left: -60px">
-                          <div class="fly-detail-user">
-                              <a th:href="@{/user/home/{userId}(userId=${content.userId})}" class="fly-link">
-                                  <cite th:text="${content.userName}"></cite>
-                              </a>
-                              <span style="display: inline-block; float: right">
-                                 <i th:text="'# ' +${contentStat.index+1}"></i>
-                              </span>
-                          </div>
 
+
+                                  <div class="fly-detail-user" >
+                                      <a th:href="@{/user/home/{userId}(userId=${content.userId})}" style="font-style: 15px;text-decoration: none" class="fly-link">
+                                          <cite th:text="${content.userName}"></cite>
+                                      </a>
+                                      <span style="display: inline-block; float: left;margin-right:10px;font-size: 15px;">
+                                         <i th:text="'# ' +${contentStat.index+1}"></i>
+                                      </span>
+                              </div>
                           <div class="detail-hits">
                               <span th:text="${content.contentTime}"></span>
                           </div>
-                      </div>
-                      <div class="detail-body jieda-body photos">
-                          <p th:text="${content.contentMsg}"></p>
-                      </div>
+                          <div class="detail-body jieda-body photos">
+                              <p style="font-size: 20px;" th:text="${content.contentMsg}"></p>
+                          </div>
                       <div class="jieda-reply">
                           <shiro:hasRole name="common">　　
+                              <i th:if="${session.userId} != ${content.userId}">
                           <span type="reply" style="margin-left:-35px" th:onclick="'replyF(\'' + ${content.userName} + '\')'">
                                 <i class="iconfont icon-svgmoban53"></i>
                                 回复
                          </span>
+                              </i>
+
+                              <i th:if="${session.userId} == ${content.userId}">
+                                  <span type="del" style="margin-left:-30px" th:id="'dc' + ${content.contentId}" th:onclick="'delContent(\'' + ${content.contentId}+ '\')'">删除</span>
+                              </i>
                           </shiro:hasRole>
-                         <!-- <div class="jieda-admin">
-                              <span type="del">删除</span>
-                          </div>-->
                       </div>
                   </li>
               </div>
           </ul>
-
+          <shiro:hasRole name="common">　　
           <div class="layui-form layui-form-pane">
-              <form th:action="@{/post/comment}" method="post">
+              <form th:action="@{/post/comment}" method="post" id="conetF">
                   <div class="layui-form-item layui-form-text">
                       <a name="comment"></a>
                       <div class="layui-input-block">
@@ -102,10 +116,13 @@
                       <input type="hidden" name="userName" th:value="${userName}">
                       <input type="hidden" name="postId" th:value="${post.postId}">
                       <input type="hidden" name="postName" th:value="${post.postTitle}">
-                      <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
+                      <input type="text" id="check" style="width: 230px;display:inline-block;margin-bottom:20px" name="checkC"  placeholder="请输入验证码（不区分大小写）" autocomplete="off" class="input-val layui-input">
+                      <canvas id="canvas" style="width: 120px;height:38px"></canvas>
+                      <button class="layui-btn" id="submitC" style="display: block;" lay-filter="*" type="button">提交回复</button>
                   </div>
               </form>
           </div>
+          </shiro:hasRole>
       </div>
   </div>
       <div class="layui-col-md4">
@@ -114,7 +131,7 @@
               <i th:each="rand:${postRands}">
                   <dd>
                       <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
-                      <span ><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
+                      <span style="display: block;float: right;"><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
                   </dd>
               </i>
 
@@ -130,24 +147,106 @@
 
 layui.config({
   version: "3.0.0",
-  base: './res/mods/'
+  base: '/res/mods/'
 }).extend({
   fly: 'index'
 }).use('fly');
 </script>
 <script type="text/javascript">
-  $(function () {
-    $("#s1").addClass("layui-this");
-  });
+  $(function(){
+      $("#s1").addClass("layui-this");
+      var show_num = [];
+      draw(show_num);
 
-  function delF(fileId) {
+      $("#canvas").on('click',function(){
+          draw(show_num);
+      })
+      $("#submitC").on('click',function(){
+          var val = $(".input-val").val().toLowerCase();
+          var num = show_num.join("");
+          if(val==''){
+              layer.msg('请输入验证码！');
+          }else if(val == num){
+              layer.msg("留言成功成功!");
+              $(".input-val").val('');
+              $("#conetF").submit()
+              draw(show_num);
+
+          }else{
+              layer.msg('验证码错误！请重新输入！');
+              $(".input-val").val('');
+              draw(show_num);
+          }
+      })
+  })
+
+  function draw(show_num) {
+      var canvas_width=$('#canvas').width();
+      var canvas_height=$('#canvas').height();
+      var canvas = document.getElementById("canvas");//获取到canvas的对象，演员
+      var context = canvas.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
+      canvas.width = canvas_width;
+      canvas.height = canvas_height;
+      var sCode = "A,B,C,E,F,G,H,J,K,L,M,N,P,Q,R,S,T,W,X,Y,Z,1,2,3,4,5,6,7,8,9,0";
+      var aCode = sCode.split(",");
+      var aLength = aCode.length;//获取到数组的长度
+
+      for (var i = 0; i <= 3; i++) {
+          var j = Math.floor(Math.random() * aLength);//获取到随机的索引值
+          var deg = Math.random() * 30 * Math.PI / 180;//产生0~30之间的随机弧度
+          var txt = aCode[j];//得到随机的一个内容
+          show_num[i] = txt.toLowerCase();
+          var x = 10 + i * 20;//文字在canvas上的x坐标
+          var y = 20 + Math.random() * 8;//文字在canvas上的y坐标
+          context.font = "bold 23px 微软雅黑";
+
+          context.translate(x, y);
+          context.rotate(deg);
+
+          context.fillStyle = randomColor();
+          context.fillText(txt, 0, 0);
+
+          context.rotate(-deg);
+          context.translate(-x, -y);
+      }
+      for (var i = 0; i <= 5; i++) { //验证码上显示线条
+          context.strokeStyle = randomColor();
+          context.beginPath();
+          context.moveTo(Math.random() * canvas_width, Math.random() * canvas_height);
+          context.lineTo(Math.random() * canvas_width, Math.random() * canvas_height);
+          context.stroke();
+      }
+      for (var i = 0; i <= 30; i++) { //验证码上显示小点
+          context.strokeStyle = randomColor();
+          context.beginPath();
+          var x = Math.random() * canvas_width;
+          var y = Math.random() * canvas_height;
+          context.moveTo(x, y);
+          context.lineTo(x + 1, y + 1);
+          context.stroke();
+      }
+  }
+
+  function randomColor() {//得到随机的颜色值
+      var r = Math.floor(Math.random() * 256);
+      var g = Math.floor(Math.random() * 256);
+      var b = Math.floor(Math.random() * 256);
+      return "rgb(" + r + "," + g + "," + b + ")";
+  }
+  function delPost(postId) {
       $.ajax({
-          url:"/file/delFile/"+fileId,
+          url:"/post/delPost/"+postId,
           type:"put",
           dataType:"json",
           cache:false,
           success:function(data){//ajax返回的数据
-                $('#bt' + fileId).parent().parent().remove();
+              if (data.success == 1) {
+                  alert("删除成功!");
+                  window.location.href = '/post/toPost';
+              } else {
+                  layer.msg("删除失败!");
+              }
+
           },
           error:function (data) {
               layer.msg("请登录哦~")
@@ -155,6 +254,30 @@ layui.config({
 
       });
   }
+
+  function delContent(contentId) {
+      $.ajax({
+          url:"/post/delContent/"+contentId,
+          type:"put",
+          dataType:"json",
+          cache:false,
+          success:function(data){//ajax返回的数据
+              if (data.success == 1) {
+                  layer.msg("删除成功!");
+                  $('#dc' + contentId).parent().parent().parent().parent().remove();
+              } else {
+                  layer.msg("删除失败!");
+              }
+
+
+          },
+          error:function (data) {
+              layer.msg("请登录哦~")
+          }
+
+      });
+  }
+
     function collectionF(postTitle,postUserId,postId) {
       console.log(postTitle,postUserId,postId);
         $.ajax({

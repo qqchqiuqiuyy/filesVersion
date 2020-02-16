@@ -86,4 +86,14 @@ public class PostController {
         return postService.CollectPost(postTitle, postUserId, postId);
     }
 
+    @RequestMapping("/delPost/{postId}")
+    @ResponseBody
+    public String DelPost(@PathVariable(name = "postId") Integer postId) {
+        return postService.DelPost(postId);
+    }
+    @RequestMapping("/delContent/{contentId}")
+    @ResponseBody
+    public String DelContent(@PathVariable(name = "contentId") Integer contentId) {
+        return postService.DelContent(contentId);
+    }
 }
