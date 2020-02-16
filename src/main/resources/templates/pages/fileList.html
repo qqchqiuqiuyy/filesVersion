@@ -71,7 +71,9 @@
               <!--分页-->
               <div style="margin-top: 40px">
                   <ul class="pagination" >
-                      <li th:class="${indexPage==1}?'disabled' : ''"><a th:class="${indexPage==1}?'disabled' : ''" th:href="@{'/post/toPost?indexPage=' + ${indexPage-1}  +'&postName=' + ${postName}  }">&laquo;</a></li>
+                      <li th:class="${indexPage==1}?'disabled' : ''">
+                          <a  th:href="'${indexPage==1}' ? 'javascript:return false;':@{'/post/toPost?indexPage=' + ${indexPage-1}  +'&postName=' + ${postName}  }">&laquo;</a>
+                      </li>
                       <li th:if="${indexPage-3 >=1}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage-3}  +'&postName=' + ${postName}   }" th:text="${indexPage -3}" >1</a></li>
                       <li th:if="${indexPage-2 >=1}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage-2}  +'&postName=' + ${postName}     }" th:text="${indexPage -2}" >1</a></li>
                       <li th:if="${indexPage-1 >=1}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage-1}  +'&postName=' + ${postName}   }" th:text="${indexPage -1}" >1</a></li>
@@ -79,7 +81,7 @@
                       <li th:if="${indexPage+1 <=totalPage}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage+1}   +'&postName=' + ${postName}   }" th:text="${indexPage +1}" >1</a></li>
                       <li th:if="${indexPage+2 <=totalPage}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage+2}  +'&postName=' + ${postName}   }" th:text="${indexPage +2}" >1</a></li>
                       <li th:if="${indexPage+3 <=totalPage}" ><a th:href="@{'/post/toPost?indexPage=' + ${indexPage+3}  +'&postName=' + ${postName}     }" th:text="${indexPage +3}" >1</a></li>
-                      <li th:class="${indexPage==totalPage}?'disabled' : ''" ><a th:class="${indexPage==totalPage}?'disabled' : ''" th:href="@{'/post/toPost?indexPage=' + ${indexPage+1}   +'&postName=' + ${postName}   }" href="#">&raquo;</a></li>
+                      <li th:class="${indexPage==totalPage}?'disabled' : ''" ><a  th:href="${indexPage==totalPage} ? 'javascript:return false;' : @{'/post/toPost?indexPage=' + ${indexPage+1}   +'&postName=' + ${postName}   }" href="#">&raquo;</a></li>
                   </ul>
               </div>
           </div>
