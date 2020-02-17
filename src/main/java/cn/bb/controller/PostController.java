@@ -2,6 +2,7 @@ package cn.bb.controller;
 
 import cn.bb.entity.File;
 import cn.bb.entity.Post;
+import cn.bb.service.FileService;
 import cn.bb.service.PostService;
 import cn.bb.vo.postAndContent;
 import com.github.pagehelper.PageInfo;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +23,9 @@ import javax.servlet.http.HttpSession;
 public class PostController {
     @Autowired
     PostService postService;
+    @Autowired
+    FileService fileService;
+
     @RequestMapping("/addPost")
     @ResponseBody
     public String AddPost(@RequestParam(name = "postTitle") String postTitle,
@@ -95,5 +100,11 @@ public class PostController {
     @ResponseBody
     public String DelContent(@PathVariable(name = "contentId") Integer contentId) {
         return postService.DelContent(contentId);
+    }
+
+    @RequestMapping("/addFile")
+    @ResponseBody
+    public String addFile(MultipartFile file, @RequestParam("fileMsg") String fileMsg) {
+        return fileService.addFile(file,fileMsg);
     }
 }

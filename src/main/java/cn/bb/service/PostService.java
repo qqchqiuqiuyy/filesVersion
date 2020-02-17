@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -52,9 +53,10 @@ public class PostService {
                 Post GetId = new Post();
                 postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName,collegeId,collegeName,GetId);
                 jsonObject.put("success",1);
-                jsonObject.put("successUrl","/post/toDetail/" + GetId.getUid());
+                jsonObject.put("successUrl","/post/toDetail/" + GetId.getPid());
             }catch (Exception ex) {
                 jsonObject.put("success",0);
+                ex.printStackTrace();
             }
         }
 
@@ -103,6 +105,11 @@ public class PostService {
     @Transactional(rollbackFor = Exception.class)
     public String DelPost(Integer postId) {
         try {
+            PostFile postFile = postMapper.GetPostPath(postId);
+            File file = new File(postFile.getPath());
+            if (file.exists()) {
+                file.delete();
+            }
             postMapper.DelCollections(postId);
             postMapper.DelContents(postId);
             postMapper.DelPost(postId);

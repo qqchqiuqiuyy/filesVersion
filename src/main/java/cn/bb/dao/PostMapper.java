@@ -20,7 +20,7 @@ public interface PostMapper {
 
     @Insert("INSERT INTO posts (postTitle, postUserName, uid, postContent, path, postFileName,collegeId, collegeName  ) VALUES" +
             "   (#{postTitle}, #{postUserName}, #{uid}, #{postContent}, #{path}, #{postFileName}, #{collegeId}, #{collegeName})")
-    @Options(useGeneratedKeys = true, keyProperty = "po.postId", keyColumn = "postId")
+    @Options(useGeneratedKeys = true, keyProperty = "po.pid", keyColumn = "pid")
     public Integer AddPost(@Param("postTitle") String postTitle,@Param("postContent") String postContent,
                         @Param("uid") Integer uid,@Param("postUserName") String postUserName,
                         @Param("path") String path,

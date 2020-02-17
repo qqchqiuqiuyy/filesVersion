@@ -85,15 +85,14 @@ public class FileService {
         String fileSize = Util.GetPrintSize(file.getSize());
         String path = PATH + "\\" + file.getOriginalFilename();
         java.io.File target = new java.io.File(path);
-        File newF = new File();
-        newF.setFileName(file.getOriginalFilename());
-        newF.setPath(path);
-        newF.setSize(fileSize);
-        newF.setMsg(fileMsg);
         try {
-            file.transferTo(target);
+            if(!target.exists()) {
+                file.transferTo(target);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
+
         }
         jsonObject.put("msg","上传成功");
         jsonObject.put("success",1);

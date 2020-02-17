@@ -135,7 +135,7 @@
             contentType: false,
             processData: false,
             success:function(data){//ajax返回的数据
-                if(data.success == "1"){
+                if(data.success == 1){
                     window.location.href = data.successUrl ;
                 }else {
                     alert("出现一个错误!");
@@ -148,7 +148,7 @@
         formData.append("file",$("#file")[0].files[0]);
         formData.append("fileMsg",$("#fileMsg").val());
         $.ajax({
-            url:"/file/addFile",
+            url:"/post/addFile",
             type:"POST",
             data:formData,
             contentType:false,
@@ -157,7 +157,7 @@
             async : false,
             mimeType:"multipart/form-data",
             success:function(data){//ajax返回的数据
-                if(data.success == "1"){
+                if(data.success == 1){
                    path = data.path;
                 }else {
                     alert("出现一个错误!");
