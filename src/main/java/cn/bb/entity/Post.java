@@ -8,8 +8,8 @@ import java.sql.Timestamp;
 @Data
 @ToString
 public class Post {
-    private Integer postId;
-    private Integer postUserId;
+    private Integer pid;
+    private Integer uid;
     private String postTitle;
     private String postUserName;
     private Timestamp postCreatTime;
@@ -18,5 +18,5 @@ public class Post {
     private String postContent;
     private Integer commentNums;
     private String collegeName;
-    private Integer collegeValue;
+    private Integer collegeId;
 }

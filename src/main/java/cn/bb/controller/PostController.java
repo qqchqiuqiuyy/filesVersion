@@ -27,27 +27,27 @@ public class PostController {
                           @RequestParam(name = "postContent") String postContent,
                           @RequestParam(name = "path") String path,
                           @RequestParam(name = "postFileName") String postFileName,
-                          @RequestParam(name = "collegeValue" ) Integer collegeValue,
+                          @RequestParam(name = "collegeId" ) Integer collegeId,
                           @RequestParam(name = "collegeName" ) String collegeName,
                           HttpServletRequest request) {
 
-        return postService.AddPost(postTitle,postContent,request,path,postFileName,collegeValue,collegeName);
+        return postService.AddPost(postTitle,postContent,request,path,postFileName,collegeId,collegeName);
     }
     @RequestMapping("/toPost")
     public String toPost(@RequestParam(name = "postTitle", defaultValue = "",required = false)  String postTitle,
                          @RequestParam(name = "indexPage",required = false) Integer indexPage,
-                         @RequestParam(name = "collegeValue",defaultValue = "-1" ,required = false) Integer collegeValue,
+                         @RequestParam(name = "collegeId",defaultValue = "-1" ,required = false) Integer collegeId,
                          Model model,HttpServletRequest request) {
         if (null == indexPage || indexPage < 1) {
             indexPage = 1;
         }
 
-        PageInfo<Post> filePageInfo = postService.GetPostList(postTitle, indexPage,collegeValue);
+        PageInfo<Post> filePageInfo = postService.GetPostList(postTitle, indexPage,collegeId);
         if (indexPage > filePageInfo.getPages()) {
             indexPage = filePageInfo.getPages();
         }
         HttpSession session = request.getSession();
-        session.setAttribute("collegeValue",collegeValue);
+        session.setAttribute("collegeId",collegeId);
         model.addAttribute("postRands",postService.GetPostRand());
         model.addAttribute("indexPage",indexPage);
         model.addAttribute("posts",filePageInfo.getList());

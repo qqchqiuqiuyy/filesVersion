@@ -1,18 +1,12 @@
 package cn.bb.service;
 
-import ch.qos.logback.core.util.FileUtil;
-import cn.bb.common.Page;
 import cn.bb.common.Util;
-import cn.bb.dao.FileMapper;
+import cn.bb.dao.PostMapper;
 import cn.bb.entity.File;
 import cn.bb.entity.PostFile;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -27,23 +21,14 @@ public class FileService {
     @Autowired
     JSONObject jsonObject;
     @Resource
-    FileMapper fileMapper;
+    PostMapper postMapper;
     @Autowired
     UserService userService;
-    public PageInfo<File> GetFileList(String fileName,Integer pageIndex) {
-        if (pageIndex == null || pageIndex < 1) {
-            pageIndex = 1;
-        }
-        if (fileName == null || fileName.equals("null")) {
-            fileName = "";
-        }
-        PageHelper.startPage(pageIndex, Page.PAGE_SIZE);
-        return new PageInfo<>(fileMapper.GetFileList(fileName));
-    }
+
 
     public String downloadFile(Integer id, HttpServletRequest request, HttpServletResponse response) {
       /*  File file = fileMapper.GetFileById(id);*/
-        PostFile postFile = fileMapper.GetPostPath(id);
+        PostFile postFile = postMapper.GetPostPath(id);
         String path = postFile.getPath();
         java.io.File realFile = new java.io.File(path);
         if (!realFile.exists()) {
@@ -105,13 +90,6 @@ public class FileService {
         newF.setPath(path);
         newF.setSize(fileSize);
         newF.setMsg(fileMsg);
-        if (!target.exists()) {
-            fileMapper.AddFile(newF);
-        } else {
-            target.delete();
-            fileMapper.DeleteFileByName(newF.getFileName());
-            fileMapper.AddFile(newF);
-        }
         try {
             file.transferTo(target);
         } catch (IOException e) {
@@ -124,10 +102,5 @@ public class FileService {
     }
 
 
-    public String delFile(Integer fileId) {
-        fileMapper.DeleteFileById(fileId);
-        jsonObject.put("msg","删除成功");
-        jsonObject.put("success",1);
-        return jsonObject.toString();
-    }
+
 }

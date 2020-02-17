@@ -27,7 +27,7 @@
     <p class="fly-home-sign" th:text="'个人签名( ' + ${user.introduce}+' )'">（人生仿若一场修行）</p>
 
     <div class="fly-sns" data-user="">
-        <button  class="layui-btn layui-btn-primary fly-imActive" id="addBut" data-type="addFriend" th:onclick="'addFriend(\'' + ${user.id}  + '\',\'' + ${user.name}+ '\',\'' + ${session.userId}+ '\')'">加为好友</button>
+        <button  class="layui-btn layui-btn-primary fly-imActive" id="addBut" data-type="addFriend" th:onclick="'addFriend(\'' + ${user.uid}  + '\',\'' + ${user.name}+ '\',\'' + ${session.userId}+ '\')'">加为好友</button>
     </div>
 
 </div>
@@ -39,7 +39,7 @@
                 <ul class="jie-row" >
                     <div th:each="post:${posts}">
                         <li>
-                            <a th:href="@{/post/toDetail/{postId}(postId=${post.postId})}" style="text-decoration: none;" th:text="${post.postTitle}" class="jie-title"> 基于 layui 的极简社区页面模版</a>
+                            <a th:href="@{/post/toDetail/{postId}(postId=${post.pid})}" style="text-decoration: none;" th:text="${post.postTitle}" class="jie-title"> 基于 layui 的极简社区页面模版</a>
                             <i th:text="${post.postCreatTime}">1天前</i>
                             <em class="layui-hide-xs" th:text="${post.commentNums} + ' 答'">1136阅/27答</em>
                         </li>
@@ -55,7 +55,7 @@
                 <ul class="home-jieda">
                     <div th:each="friend:${friends}">
                         <li>
-                            <a th:href="@{/user/home/{postId}(postId=${friend.friendId})}" style="text-decoration: none;" th:text="${friend.friendName}" class="jie-title"> 基于 layui 的极简社区页面模版</a>
+                            <a th:href="@{/user/home/{postId}(postId=${friend.fid})}" style="text-decoration: none;" th:text="${friend.friendName}" class="jie-title"> 基于 layui 的极简社区页面模版</a>
                         </li>
                     </div>
 

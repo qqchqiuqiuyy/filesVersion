@@ -8,12 +8,12 @@ import java.sql.Timestamp;
 @Data
 @ToString
 public class ReplyNotify {
-    private Integer id;
+    private Integer rnid;
     private String replyUserName;
     private Integer replyUserId;
     private String replyPostName;
     private Integer replyPostId;
     private String userName;
-    private Integer userId;
+    private Integer uid;
     private Timestamp replyTime;
 }

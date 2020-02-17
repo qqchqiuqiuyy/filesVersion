@@ -40,7 +40,7 @@ public class UserRealm extends AuthorizingRealm {
         Subject subject = SecurityUtils.getSubject();
         //这个是下面认证返回结果的第一个参数
         User user = (User) subject.getPrincipal();
-        Integer id = user.getId();
+        Integer id = user.getUid();
         //查找当前用户所有角色
         List<String> roles = userService.findUserAllRoleByUserId(id);
         //添加角色

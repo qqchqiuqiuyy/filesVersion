@@ -24,7 +24,7 @@
           <div class="detail-about">
               <div class="fly-detail-user" style="margin-left:-60px;font-size: 15px">
                   <span  >楼主</span>
-                  <a style="text-decoration: none" th:href="@{/user/home/{userId}(userId=${post.postUserId})}" class="fly-link">
+                  <a style="text-decoration: none" th:href="@{/user/home/{userId}(userId=${post.uid})}" class="fly-link">
                       <cite th:text="${post.postUserName}"></cite>
                   </a>
                   <span th:text="${post.postCreatTime}"></span>
@@ -41,11 +41,11 @@
 
               <hr>
               <span>
-                  <a th:href="@{/file/downloadFile/{fileId}(fileId=${post.postId})}" th:download="@{/file/downloadFile/{fileId}(fileId=${post.postId})}" style="color: white;text-decoration: none"  class="layui-btn" >下载</a>
-                  <button class="layui-btn" th:onclick="'collectionF(\'' + ${post.postTitle} + '\',\'' + ${post.postUserId} +'\',\''+${post.postId}+'\')'">收藏</button>
+                  <a th:href="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" th:download="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" style="color: white;text-decoration: none"  class="layui-btn" >下载</a>
+                  <button class="layui-btn" th:onclick="'collectionF(\'' + ${post.postTitle} + '\',\'' + ${post.uid} +'\',\''+${post.pid}+'\')'">收藏</button>
                    <shiro:hasRole name="common">　　
-                          <i th:if="${session.userId} == ${post.postUserId}">
-                             <button type="button" style="margin-left:-20px" class="layui-btn layui-btn-danger" th:onclick="'delPost(\'' + ${post.postId} + '\')'">删除</button>
+                          <i th:if="${session.userId} == ${post.uid}">
+                             <button type="button" style="margin-left:-20px" class="layui-btn layui-btn-danger" th:onclick="'delPost(\'' + ${post.pid} + '\')'">删除</button>
                           </i>
                    </shiro:hasRole>　　
               </span>
@@ -72,7 +72,7 @@
 
 
                                   <div class="fly-detail-user" >
-                                      <a th:href="@{/user/home/{userId}(userId=${content.userId})}" style="font-style: 15px;text-decoration: none" class="fly-link">
+                                      <a th:href="@{/user/home/{userId}(userId=${content.uid})}" style="font-style: 15px;text-decoration: none" class="fly-link">
                                           <cite th:text="${content.userName}"></cite>
                                       </a>
                                       <span style="display: inline-block; float: left;margin-right:10px;font-size: 15px;">
@@ -87,15 +87,15 @@
                           </div>
                       <div class="jieda-reply">
                           <shiro:hasRole name="common">　　
-                              <i th:if="${session.userId} != ${content.userId}">
+                              <i th:if="${session.userId} != ${content.uid}">
                           <span type="reply" style="margin-left:-35px" th:onclick="'replyF(\'' + ${content.userName} + '\')'">
                                 <i class="iconfont icon-svgmoban53"></i>
                                 回复
                          </span>
                               </i>
 
-                              <i th:if="${session.userId} == ${content.userId}">
-                                  <span type="del" style="margin-left:-30px" th:id="'dc' + ${content.contentId}" th:onclick="'delContent(\'' + ${content.contentId}+ '\')'">删除</span>
+                              <i th:if="${session.userId} == ${content.uid}">
+                                  <span type="del" style="margin-left:-30px" th:id="'dc' + ${content.conid}" th:onclick="'delContent(\'' + ${content.conid}+ '\')'">删除</span>
                               </i>
                           </shiro:hasRole>
                       </div>
@@ -114,7 +114,7 @@
                   <div class="layui-form-item">
                       <input type="hidden" name="userId" th:value="${userId}">
                       <input type="hidden" name="userName" th:value="${userName}">
-                      <input type="hidden" name="postId" th:value="${post.postId}">
+                      <input type="hidden" name="postId" th:value="${post.pid}">
                       <input type="hidden" name="postName" th:value="${post.postTitle}">
                       <input type="text" id="check" style="width: 230px;display:inline-block;margin-bottom:20px" name="checkC"  placeholder="请输入验证码（不区分大小写）" autocomplete="off" class="input-val layui-input">
                       <canvas id="canvas" style="width: 120px;height:38px"></canvas>
@@ -130,7 +130,7 @@
               <dt class="fly-panel-title">本周热议</dt>
               <i th:each="rand:${postRands}">
                   <dd>
-                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.pid})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
                       <span style="display: block;float: right;"><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
                   </dd>
               </i>

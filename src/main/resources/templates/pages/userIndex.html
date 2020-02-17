@@ -69,7 +69,7 @@
                 <div class="layui-tab-item layui-show">
                     <ul class="mine-view jie-row" th:each="post:${posts}">
                         <li>
-                            <a class="jie-title" th:href="@{/post/toDetail/{postId}(postId=${post.postId})}" target="_blank" th:text="${post.postTitle}">基于 layui 的极简社区页面模版</a>
+                            <a class="jie-title" th:href="@{/post/toDetail/{postId}(postId=${post.pid})}" target="_blank" th:text="${post.postTitle}">基于 layui 的极简社区页面模版</a>
                             <i th:text="${post.postCreatTime}">2017/3/14 上午8:30:00</i>
                             <em th:text="${post.commentNums}+'答'">10答</em>
                         </li>
@@ -80,7 +80,7 @@
                 <div class="layui-tab-item">
                     <ul class="mine-view jie-row" th:each="collect:${collections}">
                         <li>
-                            <a class="jie-title" th:href="@{/post/toDetail/{postId}(postId=${collect.postId})}" target="_blank" th:text="${collect.postTitle}">基于 layui 的极简社区页面模版</a>
+                            <a class="jie-title" th:href="@{/post/toDetail/{postId}(postId=${collect.pid})}" target="_blank" th:text="${collect.postTitle}">基于 layui 的极简社区页面模版</a>
                             <i>收藏于<i th:text="${collect.collectTime}"></i></i>  </li>
                     </ul>
                     <div id="LAY_page1"></div>

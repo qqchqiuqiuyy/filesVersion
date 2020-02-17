@@ -60,11 +60,11 @@
                 <!--<div class="fly-none">您暂时没有最新消息</div>-->
                 <ul class="mine-msg" id="allNotify">
                     <div th:each="notify:${notifies}">
-                        <li th:id="'not'+${notify.id}">
+                        <li th:id="'not'+${notify.rnid}">
                             <blockquote class="layui-elem-quote">
                                 <a th:href="@{/user/home/{userId}(userId=${notify.replyUserId})}" target="_blank"><cite th:text="${notify.replyUserName}">Absolutely</cite></a>回答了您在<a target="_blank" th:href="@{/post/toDetail/{postId}(postId=${notify.replyPostId})}"><cite th:text="${notify.replyPostName} + '的回帖'">layui后台框架</cite></a>
                             </blockquote>
-                            <p><span th:text="${notify.replyTime}">1小时前</span><button th:onclick="'delNotify(\'' + ${notify.id} + '\')'" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</button></p>
+                            <p><span th:text="${notify.replyTime}">1小时前</span><button th:onclick="'delNotify(\'' + ${notify.rnid} + '\')'" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</button></p>
                         </li>
                     </div>
                 </ul>

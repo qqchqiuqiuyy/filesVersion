@@ -26,14 +26,14 @@
 
                         <div style="float: left;margin-top: -1px;">
                               <div class="layui-input-inline" style="width:120px">
-                                <select name="collegeValue" >
+                                <select name="collegeId" >
                                   <option value="">选择学院</option>
                                  <span th:each="college:${colleges}">
-                                     <i th:if="${college.collegeValue} == ${session.collegeValue}">
-                                         <option th:value="${college.collegeValue}" th:text="${college.collegeName}" selected="selected" ></option>
+                                     <i th:if="${college.collegeId} == ${session.collegeId}">
+                                         <option th:value="${college.collegeId}" th:text="${college.collegeName}" selected="selected" ></option>
                                      </i>
-                                     <i th:if="${college.collegeValue} != ${session.collegeValue}">
-                                         <option th:value="${college.collegeValue}" th:text="${college.collegeName}" ></option>
+                                     <i th:if="${college.collegeId} != ${session.collegeId}">
+                                         <option th:value="${college.collegeId}" th:text="${college.collegeName}" ></option>
                                      </i>
                                   </span>
                                 </select>
@@ -50,10 +50,10 @@
               <li style="padding:0 0 0 20px;height: 60px;border-bottom: 2px dotted #e2e2e2;">
                   <h2 style="padding-top:5px">
                       <a class="layui-badge" style="text-decoration: none">分享</a>
-                      <a th:href="@{/post/toDetail/{postId}(postId=${post.postId})}" style="text-decoration: none" th:text="${post.postTitle}">基于 layui 的极简社区页面模版</a>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${post.pid})}" style="text-decoration: none" th:text="${post.postTitle}">基于 layui 的极简社区页面模版</a>
                   </h2>
                   <div class="fly-list-info">
-                      <a th:href="@{/user/home/{userId}(userId=${post.postUserId})}" style="text-decoration: none;" link>
+                      <a th:href="@{/user/home/{userId}(userId=${post.uid})}" style="text-decoration: none;" link>
                           <cite th:text="${post.postUserName}">贤心</cite>
                       </a>
                       <span th:text="${post.postCreatTime}">2017-11-30</span>
@@ -93,7 +93,7 @@
               <dt class="fly-panel-title">本周热议</dt>
               <i th:each="rand:${postRands}">
                   <dd>
-                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.postId})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
+                      <a th:href="@{/post/toDetail/{postId}(postId=${rand.pid})}" th:text="${rand.postTitle}" style="text-decoration: none">基于 layui 的极简社区页面模版</a>
                       <span style="display: block;float: right;"><i class="iconfont icon-pinglun1"></i> <span th:text="${rand.commentNums}"></span></span>
                   </dd>
               </i>

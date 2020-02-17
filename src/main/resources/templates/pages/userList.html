@@ -49,7 +49,7 @@
                   <tr>
                       <td th:text="${user.account}"></td>
                           <td>
-                              <button  th:id="'bt' + ${user.id}" th:value="${user.id}" onclick="GitU(this.value)"  style="color: white;" class="layui-btn layui-btn-danger">授权</button>
+                              <button  th:id="'bt' + ${user.uid}" th:value="${user.uid}" onclick="GitU(this.value)"  style="color: white;" class="layui-btn layui-btn-danger">授权</button>
                           </td>
                   </tr>
               </div>

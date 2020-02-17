@@ -6,7 +6,7 @@ import lombok.Getter;
 @Data
 @Getter
 public class Role {
-    public Integer id;
+    public Integer rid;
     public String roleName;
 
 }

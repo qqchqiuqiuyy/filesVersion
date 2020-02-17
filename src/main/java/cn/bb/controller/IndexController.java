@@ -22,20 +22,6 @@ public class IndexController {
     PostService postService;
 
 
-
-    @RequestMapping("/toFile")
-    public String toFile(@RequestParam(name = "fileName", defaultValue = "",required = false)  String fileName,
-                         @RequestParam(name = "indexPage",required = false) Integer indexPage,
-                         Model model) {
-        if (null == indexPage || indexPage < 1) {
-            indexPage = 1;
-        }
-        PageInfo<File> filePageInfo = fileService.GetFileList(fileName, indexPage);
-        model.addAttribute("indexPage",indexPage);
-        model.addAttribute("files",filePageInfo.getList());
-        return "pages/fileList";
-    }
-
     @RequestMapping("/toAddPost")
     public String toAddPost(Model model){
         model.addAttribute("colleges",postService.GetAllColleges());

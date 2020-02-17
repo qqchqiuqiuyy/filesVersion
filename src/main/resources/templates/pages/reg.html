@@ -61,7 +61,7 @@
                  <select name="collegeValue"  id="collValue"  >
                   <option value="">选择学院</option>
                    <span th:each="col:${colleges}">
-                     <option th:value="${col.collegeValue}" th:text="${col.collegeName}"></option>
+                     <option th:value="${col.collegeId}" th:text="${col.collegeName}"></option>
                    </span>
                 </select>
               </div>
@@ -109,7 +109,7 @@ layui.config({
   function reg() {
 
       var formData = new FormData();
-      formData.append("collegeValue",$("#collValue").val());
+      formData.append("collegeId",$("#collValue").val());
       formData.append("collegeName",$("#collValue").find("option:selected").text());
       formData.append("account",$("#L_account").val());
       formData.append("name",$("#L_name").val());

@@ -158,10 +158,10 @@ layui.config({
           success:function(data){//ajax返回的数据
               console.log(data);
               layer.msg(data.msg);
-              if(data.success == '1'){
+              if(data.success == 1){
                   alert("修改成功")
                   window.location.href = '/user/set' ;
-              }else if(data.success == '0'){
+              }else{
                   $('#errMsg').text(data.msg);
               }
           },

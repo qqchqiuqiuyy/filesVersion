@@ -6,9 +6,9 @@ import lombok.ToString;
 @Data
 @ToString
 public class Friend {
-    private Integer id;
+    private Integer fid;
     private Integer friendId;
     private String friendName;
-    private Integer userId;
+    private Integer uid;
 
 }

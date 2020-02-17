@@ -54,7 +54,7 @@ public class UserService {
             HttpSession session = request.getSession();
             String id = session.getId();
             session.setAttribute("name",user.getName());
-            session.setAttribute("userId",user.getId());
+            session.setAttribute("userId",user.getUid());
             session.setMaxInactiveInterval(360000);
             jsonObject.put("success",1);
             jsonObject.put("msg","登录成功!!");
@@ -89,11 +89,11 @@ public class UserService {
             user.setName(name);
             user.setSex(sex);
             user.setCollegeName(collegeName);
-            user.setCollegeValue(collegeValue);
+            user.setCollegeId(collegeValue);
             //存入数据库
             userMapper.addUser(user);
             //新增用户给予user:common角色
-            userMapper.addRole(user.getId(), 1,"common");
+            userMapper.addRole(user.getUid(), 1,"common");
             jsonObject.put("msg","注册成功!!");
             jsonObject.put("success",1);
         }else if (user.getAccount().equals(account)){
@@ -155,7 +155,7 @@ public class UserService {
         HttpSession session = request.getSession();
         Integer userId = (Integer)session.getAttribute("userId");
         User user = userMapper.GetUserByName(username);
-        if (user != null) {
+        if (user != null && !request.getSession().getAttribute("name").equals(username)) {
             jsonObject.put("success","0");
             jsonObject.put("msg","该名称已存在,请更换");
             return jsonObject.toString();
@@ -182,7 +182,7 @@ public class UserService {
         }
         //用户名加盐  MD5加密输入进来的密码
         Md5Hash pwd = new Md5Hash(pass, ByteSource.Util.bytes(user.getAccount()));
-        userMapper.SetNewPwd(user.getId(),pwd.toString());
+        userMapper.SetNewPwd(user.getUid(),pwd.toString());
         jsonObject.put("success",1);
         return jsonObject.toString();
     }

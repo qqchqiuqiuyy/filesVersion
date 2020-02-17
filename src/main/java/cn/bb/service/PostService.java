@@ -35,24 +35,24 @@ public class PostService {
         }
         PageHelper.startPage(pageIndex, Page.PAGE_SIZE);
         if (subjectValue == -1) {
-            return new PageInfo<>(postMapper.GetPostList2(postTitle,subjectValue));
+            return new PageInfo<>(postMapper.GetPostList2(postTitle));
         }
 
         return new PageInfo<>(postMapper.GetPostList(postTitle,subjectValue));
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String AddPost(String postTitle, String postContent, HttpServletRequest request,String path,String postFileName,Integer collegeValue,String collegeName){
+    public String AddPost(String postTitle, String postContent, HttpServletRequest request,String path,String postFileName,Integer collegeId,String collegeName){
         String userName = (String)request.getSession().getAttribute("name");
         Integer userId = (Integer)request.getSession().getAttribute("userId");
-        if (postTitle == "" || postContent == "" || collegeValue == null ) {
+        if (postTitle == "" || postContent == "" || collegeId == null ) {
             jsonObject.put("success",0);
         } else {
             try {
                 Post GetId = new Post();
-                postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName,collegeValue,collegeName,GetId);
+                postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName,collegeId,collegeName,GetId);
                 jsonObject.put("success",1);
-                jsonObject.put("successUrl","/post/toDetail/" + GetId.getPostId());
+                jsonObject.put("successUrl","/post/toDetail/" + GetId.getUid());
             }catch (Exception ex) {
                 jsonObject.put("success",0);
             }
@@ -74,7 +74,7 @@ public class PostService {
             String name = content.substring(1, content.indexOf(" "));
             User user = userMapper.GetUserByName(name);
             if (null != user) {
-                postMapper.AddNotify(user.getName(),user.getId(),postId,postName,replyUserId,replyUserName);
+                postMapper.AddNotify(user.getName(),user.getUid(),postId,postName,replyUserId,replyUserName);
             }
         }
         postMapper.PostContent(replyUserId,replyUserName,content,postId);

@@ -8,9 +8,9 @@ import java.sql.Timestamp;
 @Data
 @ToString
 public class Collections {
-    private Integer id;
+    private Integer colid;
     private String postTitle;
-    private Integer postId;
-    private Integer postUserId;
+    private Integer pid;
+    private Integer uid;
     private Timestamp collectTime;
 }

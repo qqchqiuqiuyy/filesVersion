@@ -8,10 +8,10 @@ import java.sql.Timestamp;
 @Data
 @ToString
 public class Content {
-    private Integer contentId;
-    private Integer userId;
+    private Integer conid;
+    private Integer uid;
     private String userName;
     private Timestamp contentTime;
     private String contentMsg;
-    private Integer postId;
+    private Integer pid;
 }

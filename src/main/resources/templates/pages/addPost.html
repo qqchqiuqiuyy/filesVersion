@@ -32,10 +32,10 @@
                             </div>
 
                                 <div class="layui-input-inline" style="width:250px;margin-bottom:20px">
-                                    <select name="collegeValue" id="collValue">
+                                    <select name="collegeId" id="collValue">
                                         <option value="">选择学院</option>
                                         <span th:each="college:${colleges}">
-                                            <option th:value="${college.collegeValue}" th:text="${college.collegeName}" ></option>
+                                            <option th:value="${college.collegeId}" th:text="${college.collegeName}" ></option>
                                         </span>
                                     </select>
                                 </div>
@@ -124,7 +124,7 @@
         formData.append("postContent",$("#L_content").val());
         formData.append("path",path);
         formData.append("postFileName",postFileName);
-        formData.append("collegeValue",$("#collValue").val());
+        formData.append("collegeId",$("#collValue").val());
         formData.append("collegeName",$("#collValue").find("option:selected").text());
         $.ajax({
             url:"/post/addPost",
