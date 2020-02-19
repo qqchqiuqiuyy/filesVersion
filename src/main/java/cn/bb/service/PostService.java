@@ -110,10 +110,10 @@ public class PostService {
             if (file.exists()) {
                 file.delete();
             }
-            postMapper.DelCollections(postId);
-            postMapper.DelContents(postId);
+           /* postMapper.DelCollections(postId);
+            postMapper.DelContents(postId);*/
             postMapper.DelPost(postId);
-            postMapper.DelReplyNotify(postId);
+          /*  postMapper.DelReplyNotify(postId);*/
             jsonObject.put("success","1");
 
         }catch (Exception ex) {

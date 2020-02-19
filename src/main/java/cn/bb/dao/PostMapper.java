@@ -57,7 +57,7 @@ public interface PostMapper {
     @Select("SELECT * FROM collections WHERE uid = #{uid}")
     public List<Collections> GetUserCollections(@Param("uid") Integer uid);
 
-    @Insert("INSERT INTO replynotify (userName, uid,replyPostId,replyPostName,replyUserId,replyUserName)" +
+    @Insert("INSERT INTO replynotify (userName, uid,pid,replyPostName,replyUserId,replyUserName)" +
             " VALUES (#{userName},#{userId},#{postId},#{postName},#{replyUserId},#{replyUserName})")
     public void AddNotify(@Param("userName") String userName,@Param("userId")  Integer userId,@Param("postId")  Integer postId,
                           @Param("postName") String postName,@Param("replyUserId")  Integer replyUserId,
@@ -79,7 +79,7 @@ public interface PostMapper {
     @Delete("DELETE FROM posts WHERE pid = #{postId}")
     public Integer DelPost(@Param("postId") Integer postId);
 
-    @Delete("DELETE FROM replynotify WHERE replyPostId = #{postId}")
+    @Delete("DELETE FROM replynotify WHERE pid = #{postId}")
     public Integer DelReplyNotify(@Param("postId") Integer postId);
 
     @Delete("DELETE FROM contents WHERE conid = #{contentId}")

@@ -41,9 +41,10 @@
 
               <hr>
               <span>
+                   <shiro:hasRole name="common">　
                   <a th:href="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" th:download="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" style="color: white;text-decoration: none"  class="layui-btn" >下载</a>
                   <button class="layui-btn" th:onclick="'collectionF(\'' + ${post.postTitle} + '\',\'' + ${post.uid} +'\',\''+${post.pid}+'\')'">收藏</button>
-                   <shiro:hasRole name="common">　　
+                  　
                           <i th:if="${session.userId} == ${post.uid}">
                              <button type="button" style="margin-left:-20px" class="layui-btn layui-btn-danger" th:onclick="'delPost(\'' + ${post.pid} + '\')'">删除</button>
                           </i>
