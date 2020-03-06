@@ -27,7 +27,9 @@
     <p class="fly-home-sign" th:text="'个人签名( ' + ${user.introduce}+' )'">（人生仿若一场修行）</p>
 
     <div class="fly-sns" data-user="">
+        <i th:if="${session.userId} != ${user.uid}">
         <button  class="layui-btn layui-btn-primary fly-imActive" id="addBut" data-type="addFriend" th:onclick="'addFriend(\'' + ${user.uid}  + '\',\'' + ${user.name}+ '\',\'' + ${session.userId}+ '\')'">加为好友</button>
+            <i>
     </div>
 
 </div>

@@ -12,7 +12,7 @@ public class ReplyNotify {
     private String replyUserName;
     private Integer replyUserId;
     private String replyPostName;
-    private Integer replyPostId;
+    private Integer pid;
     private String userName;
     private Integer uid;
     private Timestamp replyTime;
