@@ -16,25 +16,29 @@ import java.sql.Timestamp;
 @Document(indexName = "post",type = "docs",shards = 1,replicas = 0)
 public class Post {
     @Id
-    private Integer pid;
+    private Integer pid;  //主键,统一存储到elasticsearch中,之后能快速得到主键
+
+    @Field(type = FieldType.String,analyzer = "ik_max_word")
+    private String postTitle;  //搜索是按贴标题搜索,所以对此字段进行标志
 
     private Integer uid;
-    @Field(type = FieldType.String,analyzer = "ik_max_word")
-    private String postTitle;
-    @Field(type = FieldType.Auto)
+
+
     private String postUserName;
-    @Field(type = FieldType.Auto)
+
+
     private Timestamp postCreatTime;
-    @Field(type = FieldType.Auto)
+
     private String path;
-    @Field(type = FieldType.Auto)
+
     private String postFileName;
-    @Field(type = FieldType.Auto)
+
     private String postContent;
-    @Field(type = FieldType.Auto)
+
     private Integer commentNums;
-    @Field(type = FieldType.Auto)
+
     private String collegeName;
-    @Field(type = FieldType.Auto)
+
+
     private Integer collegeId;
 }

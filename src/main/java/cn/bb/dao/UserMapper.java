@@ -20,7 +20,7 @@ public interface UserMapper {
 
     @Insert("INSERT INTO users (account,name, password, sex, collegeId, collegeName) VALUES (#{user.account}, #{user.name},#{user.password}" +
             " ,#{user.sex},#{user.collegeId},#{user.collegeName})")
-    @Options(useGeneratedKeys = true, keyProperty = "user.id", keyColumn = "id")
+    @Options(useGeneratedKeys = true, keyProperty = "user.uid", keyColumn = "uid")
     public void addUser(@Param("user") User user);
 
     @Insert("INSERT INTO userrole (uid, rid, roleName) VALUES (#{uid}, #{roleId}, #{roleName})")

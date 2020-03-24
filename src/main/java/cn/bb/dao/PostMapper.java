@@ -10,13 +10,12 @@ import java.util.List;
 @Mapper
 public interface PostMapper {
 
-    @Select("SELECT * from posts WHERE postTitle LIKE CONCAT('%',#{postTitle},'%') AND collegeId = #{collegeId}" +
-            " ORDER BY postCreatTime desc")
-    public List<Post> GetPostList(@Param("postTitle") String postTitle, @Param("collegeId") Integer collegeId);
+    @Select("SELECT * from posts  ORDER BY postCreatTime desc")
+    public List<Post> GetPostList();
 
-    @Select("SELECT * from posts WHERE postTitle LIKE CONCAT('%',#{postTitle},'%')" +
+    @Select("SELECT * from posts WHERE collegeId = #{collegeId}" +
             " ORDER BY postCreatTime desc")
-    public List<Post> GetPostList2(@Param("postTitle") String postTitle);
+    public List<Post> GetPostList2(@Param("collegeId") Integer collegeId);
 
     @Insert("INSERT INTO posts (postTitle, postUserName, uid, postContent, path, postFileName,collegeId, collegeName  ) VALUES" +
             "   (#{postTitle}, #{postUserName}, #{uid}, #{postContent}, #{path}, #{postFileName}, #{collegeId}, #{collegeName})")
@@ -37,8 +36,9 @@ public interface PostMapper {
 
     @Insert("INSERT INTO contents (uid, userName, contentMsg, pid) VALUES " +
             " (#{uid}, #{userName}, #{contentMsg}, #{postId})")
+    @Options(useGeneratedKeys = true, keyProperty = "notify.conid", keyColumn = "conid")
     public void PostContent(@Param("uid") Integer uid,@Param("userName")  String userName,@Param("contentMsg")  String contentMsg,
-                            @Param("postId") Integer postId);
+                            @Param("postId") Integer postId, @Param("notify") ReplyNotify notify);
 
     @Update("UPDATE posts SET commentNums = commentNums + 1 WHERE pid = #{postId}")
     public void PostAddCommentNums(@Param("postId") Integer postId);
@@ -57,11 +57,12 @@ public interface PostMapper {
     @Select("SELECT * FROM collections WHERE uid = #{uid}")
     public List<Collections> GetUserCollections(@Param("uid") Integer uid);
 
-    @Insert("INSERT INTO replynotify (userName, uid,pid,replyPostName,replyUserId,replyUserName)" +
-            " VALUES (#{userName},#{userId},#{postId},#{postName},#{replyUserId},#{replyUserName})")
+    @Insert("INSERT INTO replynotify (userName, uid,pid,replyPostName,replyUserId,replyUserName,conid)" +
+            " VALUES (#{userName},#{userId},#{postId},#{postName},#{replyUserId},#{replyUserName},#{conid})")
     public void AddNotify(@Param("userName") String userName,@Param("userId")  Integer userId,@Param("postId")  Integer postId,
                           @Param("postName") String postName,@Param("replyUserId")  Integer replyUserId,
-                          @Param("replyUserName")   String replyUserName);
+                          @Param("replyUserName")   String replyUserName,
+                          @Param("conid")  Integer conid);
 
 
     @Select("SELECT * FROM friends WHERE uid = #{uid}")
@@ -87,4 +88,9 @@ public interface PostMapper {
 
     @Select("SELECT path, postFileName FROM posts WHERE pid = #{id}")
     public PostFile GetPostPath(@Param("id") Integer id);
+
+    @Select("SELECT * FROM posts WHERE pid = #{id}")
+    Post GetPost(@Param("id")  Integer pid);
+    @Select("SELECT * FROM posts WHERE pid = #{id} AND collegeId = #{collegeId}")
+    Post GetPost2(@Param("id") Integer pid, @Param("collegeId") Integer collegeId);
 }

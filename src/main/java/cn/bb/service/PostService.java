@@ -1,6 +1,7 @@
 package cn.bb.service;
 
 import cn.bb.common.Page;
+import cn.bb.common.PostRepository;
 import cn.bb.dao.PostMapper;
 import cn.bb.dao.UserMapper;
 import cn.bb.entity.*;
@@ -8,12 +9,18 @@ import cn.bb.vo.postAndContent;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.sf.json.JSONObject;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,19 +34,43 @@ public class PostService {
     @Autowired
     JSONObject jsonObject;
 
-    public PageInfo<Post> GetPostList(String postTitle, Integer pageIndex,Integer subjectValue) {
-        if (pageIndex == null || pageIndex < 1) {
-            pageIndex = 1;
-        }
-        if (postTitle == null || postTitle.equals("null")) {
+    @Autowired
+    PostRepository postRepository;
+
+    public PageInfo<Post> GetPostList(String postTitle, Integer pageIndex,Integer collegeId) {
+
+        if (postTitle == null || postTitle.equals("null") || "".equals(postTitle)) {
             postTitle = "";
-        }
-        PageHelper.startPage(pageIndex, Page.PAGE_SIZE);
-        if (subjectValue == -1) {
-            return new PageInfo<>(postMapper.GetPostList2(postTitle));
+            PageHelper.startPage(pageIndex, Page.PAGE_SIZE);
+            List<Post> posts = null;
+            if (collegeId == -1) {
+                posts = postMapper.GetPostList();
+            } else {
+                posts = postMapper.GetPostList2(collegeId);
+            }
+            return new PageInfo<>(posts);
         }
 
-        return new PageInfo<>(postMapper.GetPostList(postTitle,subjectValue));
+
+        // 构建查询条件
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        // 添加基本分词查询
+        queryBuilder.withQuery(QueryBuilders.termQuery("postTitle", postTitle));
+        queryBuilder.withPageable(new PageRequest(pageIndex,Page.PAGE_SIZE,new Sort(Sort.Direction.DESC,"pid")));
+        // 搜索，获取结果
+        org.springframework.data.domain.Page<Post> search = postRepository.search(queryBuilder.build());
+        List<Post> posts = new ArrayList<>();
+
+        if (collegeId == -1) {
+            for(Post p : search) {
+                posts.add(postMapper.GetPost(p.getPid()));
+            }
+            return new PageInfo<>(posts);
+        }
+        for(Post p : search) {
+            posts.add(postMapper.GetPost2(p.getPid(),collegeId));
+        }
+        return new PageInfo<>(posts);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -51,7 +82,9 @@ public class PostService {
         } else {
             try {
                 Post GetId = new Post();
+                GetId.setPostTitle(postTitle);
                 postMapper.AddPost(postTitle,postContent,userId,userName,path,postFileName,collegeId,collegeName,GetId);
+                postRepository.save(GetId);
                 jsonObject.put("success",1);
                 jsonObject.put("successUrl","/post/toDetail/" + GetId.getPid());
             }catch (Exception ex) {
@@ -72,15 +105,17 @@ public class PostService {
 
     @Transactional(rollbackFor = Exception.class)
     public void PostComment(Integer postId,String postName,String replyUserName,Integer replyUserId, String content) {
+        ReplyNotify notify = new ReplyNotify();
+        postMapper.PostContent(replyUserId,replyUserName,content,postId,notify);
+        postMapper.PostAddCommentNums(postId);
         if (content.charAt(0) == '@' && content.indexOf(" ") != -1) {
             String name = content.substring(1, content.indexOf(" "));
             User user = userMapper.GetUserByName(name);
             if (null != user) {
-                postMapper.AddNotify(user.getName(),user.getUid(),postId,postName,replyUserId,replyUserName);
+                postMapper.AddNotify(user.getName(),user.getUid(),postId,postName,replyUserId,replyUserName,notify.getConid());
             }
         }
-        postMapper.PostContent(replyUserId,replyUserName,content,postId);
-        postMapper.PostAddCommentNums(postId);
+
     }
 
     public List<Post> GetPostRand(){
@@ -90,11 +125,17 @@ public class PostService {
 
     @Transactional(rollbackFor = Exception.class)
     public String CollectPost(String postTitle, Integer postUserId, Integer postId) {
-        if (1 == postMapper.CollectPost(postTitle,postUserId,postId) ) {
-            jsonObject.put("success",1);
-        } else {
-            jsonObject.put("success",0);
+        try {
+            if (1 == postMapper.CollectPost(postTitle,postUserId,postId) ) {
+                jsonObject.put("success",1);
+            } else {
+                jsonObject.put("success",0);
+            }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            jsonObject.put("success",3);
         }
+
         return jsonObject.toString();
     }
 
@@ -110,10 +151,8 @@ public class PostService {
             if (file.exists()) {
                 file.delete();
             }
-           /* postMapper.DelCollections(postId);
-            postMapper.DelContents(postId);*/
             postMapper.DelPost(postId);
-          /*  postMapper.DelReplyNotify(postId);*/
+            postRepository.delete(postId);
             jsonObject.put("success","1");
 
         }catch (Exception ex) {

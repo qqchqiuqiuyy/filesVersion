@@ -15,5 +15,6 @@ public class ReplyNotify {
     private Integer pid;
     private String userName;
     private Integer uid;
+    private Integer conid;
     private Timestamp replyTime;
 }

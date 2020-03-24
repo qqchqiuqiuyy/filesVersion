@@ -17,9 +17,16 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  data:
+    elasticsearch:
+      cluster-name: my-application
+      cluster-nodes: 127.0.0.1:9300
+      repositories:
+        enabled: true
 
 mybatis:
   type-handlers-package: cn.bb.entity
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: true
+

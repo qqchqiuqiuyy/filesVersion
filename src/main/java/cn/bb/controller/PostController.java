@@ -43,10 +43,9 @@ public class PostController {
                          @RequestParam(name = "indexPage",required = false) Integer indexPage,
                          @RequestParam(name = "collegeId",defaultValue = "-1" ,required = false) Integer collegeId,
                          Model model,HttpServletRequest request) {
-        if (null == indexPage || indexPage < 1) {
-            indexPage = 1;
+        if (indexPage == null) {
+            indexPage = 0;
         }
-
         PageInfo<Post> filePageInfo = postService.GetPostList(postTitle, indexPage,collegeId);
         if (indexPage > filePageInfo.getPages()) {
             indexPage = filePageInfo.getPages();
