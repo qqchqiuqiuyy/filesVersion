@@ -48,8 +48,8 @@ public class ShiroConfig {
         filterMap.put("/index/toAddPost","authc");
         filterMap.put("/post/collectionPost/**","authc");
         filterMap.put("/index/toAddPost/**","authc");
-        filterMap.put("/res/**","anon");
-        /*  filterMap.put("/**","anon");*/
+
+
 
 
 

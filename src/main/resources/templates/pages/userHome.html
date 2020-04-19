@@ -57,7 +57,7 @@
                 <ul class="home-jieda">
                     <div th:each="friend:${friends}">
                         <li>
-                            <a th:href="@{/user/home/{postId}(postId=${friend.fid})}" style="text-decoration: none;" th:text="${friend.friendName}" class="jie-title"> 基于 layui 的极简社区页面模版</a>
+                            <a th:href="@{/user/home/{uid}(uid=${friend.friendId})}" style="text-decoration: none;" th:text="${friend.friendName}" class="jie-title"> </a>
                         </li>
                     </div>
 

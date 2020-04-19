@@ -53,7 +53,7 @@ public class PostController {
         HttpSession session = request.getSession();
         session.setAttribute("collegeId",collegeId);
         model.addAttribute("postRands",postService.GetPostRand());
-        model.addAttribute("indexPage",indexPage);
+        model.addAttribute("indexPage",indexPage+1);
         model.addAttribute("posts",filePageInfo.getList());
         model.addAttribute("totalPage",filePageInfo.getPages());
         model.addAttribute("colleges",postService.GetAllColleges());

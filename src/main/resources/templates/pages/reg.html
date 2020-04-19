@@ -109,7 +109,8 @@ layui.config({
   function reg() {
 
       var formData = new FormData();
-      formData.append("collegeId",$("#collValue").val());
+      formData.append("collegeValue",$("#collValue").val());
+      console.log($("#collValue").val());
       formData.append("collegeName",$("#collValue").find("option:selected").text());
       formData.append("account",$("#L_account").val());
       formData.append("name",$("#L_name").val());

@@ -42,11 +42,15 @@
               <hr>
               <span>
                    <shiro:hasRole name="common">　
-                  <a th:href="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" th:download="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" style="color: white;text-decoration: none"  class="layui-btn" >下载</a>
-                  <button class="layui-btn" th:onclick="'collectionF(\'' + ${post.postTitle} + '\',\'' + ${post.uid} +'\',\''+${post.pid}+'\')'">收藏</button>
-                  　
+                      <a th:href="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" th:download="@{/file/downloadFile/{fileId}(fileId=${post.pid})}" style="color: white;text-decoration: none"  class="layui-btn" >下载</a>
+                      <button class="layui-btn" th:onclick="'collectionF(\'' + ${post.postTitle} + '\',\'' + ${post.uid} +'\',\''+${post.pid}+'\')'">收藏</button>
                           <i th:if="${session.userId} == ${post.uid}">
+                             <button type="button" style="margin-left:20px" class="layui-btn layui-btn-danger" th:onclick="'delPost(\'' + ${post.pid} + '\')'">删除</button>
+                          </i>
+                        <i th:if="${session.userId} != ${post.uid}">
+                             <shiro:hasRole name="manager">　
                              <button type="button" style="margin-left:-20px" class="layui-btn layui-btn-danger" th:onclick="'delPost(\'' + ${post.pid} + '\')'">删除</button>
+                             </shiro:hasRole>
                           </i>
                    </shiro:hasRole>　　
               </span>
@@ -54,7 +58,7 @@
               <div class="fly-detail-info" style="margin-top: -35px">
                   <span class="fly-list-nums">
                     <!--<span class="layui-btn layui-btn-xs jie-admin" type="del" style="margin-top: 7px">删除</span>-->
-                    <span style="display: inline-block;margin-top: 5px"><i class="iconfont" title="回答">&#xe60c;</i> <i style="margin-left:-15px" th:text="${contentsNums}"></i> </a>
+                      <span style="display: inline-block;margin-top: 5px"><i class="iconfont" title="回答">&#xe60c;</i> <i style="margin-left:-15px" th:text="${contentsNums}"></i> </span>
                   </span>
               </div>
           </div>
@@ -95,6 +99,11 @@
 
                               <i th:if="${session.userId} == ${content.uid}">
                                   <span type="del" style="margin-left:-30px" th:id="'dc' + ${content.conid}" th:onclick="'delContent(\'' + ${content.conid}+ '\')'">删除</span>
+                              </i>
+                              <i th:if="${session.userId} != ${content.uid}">
+                                  <shiro:hasRole name="manager">　　
+                                      <span type="del" style="margin-left:-30px" th:id="'dc' + ${content.conid}" th:onclick="'delContent(\'' + ${content.conid}+ '\')'">删除</span>
+                                  </shiro:hasRole>
                               </i>
                           </shiro:hasRole>
                       </div>

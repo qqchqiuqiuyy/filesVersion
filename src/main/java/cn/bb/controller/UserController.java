@@ -115,8 +115,8 @@ public class UserController {
         return userService.SetUserPwd(pass,repass, request);
     }
 
-    @RequestMapping("/home/{userId}")
-    public String ToUserHome(@PathVariable(name = "userId") Integer userId,Model model){
+    @RequestMapping("/home/{uid}")
+    public String ToUserHome(@PathVariable(name = "uid") Integer userId,Model model){
         Map<String, Object> map = userService.ToUserHome(userId);
         model.addAttribute("user",(User)map.get("user"));
         model.addAttribute("posts",(List<Post>)map.get("posts"));

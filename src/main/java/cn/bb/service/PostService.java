@@ -51,7 +51,6 @@ public class PostService {
             return new PageInfo<>(posts);
         }
 
-
         // 构建查询条件
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
         // 添加基本分词查询

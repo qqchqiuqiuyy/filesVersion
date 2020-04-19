@@ -31,7 +31,6 @@ public class UserRealm extends AuthorizingRealm {
      * @param principalCollection
      * @return
      */
-
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //给资源授权
