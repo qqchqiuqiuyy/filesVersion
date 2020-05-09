@@ -180,6 +180,11 @@ public class UserService {
             jsonObject.put("success",0);
             return jsonObject.toString();
         }
+        if (pass.length() < 6 || pass.length() > 16) {
+            jsonObject.put("msg","密码长度不符合");
+            jsonObject.put("success",0);
+            return jsonObject.toString();
+        }
         //用户名加盐  MD5加密输入进来的密码
         Md5Hash pwd = new Md5Hash(pass, ByteSource.Util.bytes(user.getAccount()));
         userMapper.SetNewPwd(user.getUid(),pwd.toString());
@@ -204,15 +209,28 @@ public class UserService {
         return  userMapper.GetNotify(userId);
 
     }
-
+    @Transactional(rollbackFor = Exception.class)
     public String DelNotify(Integer notifyId) {
-        userMapper.DelNotify(notifyId);
-        return jsonObject.put("success","1").toString();
-    }
+        try{
+            userMapper.DelNotify(notifyId);
+            jsonObject.put("success","1");
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            jsonObject.put("success","0");
+        }
 
+        return jsonObject.toString();
+    }
+    @Transactional(rollbackFor = Exception.class)
     public String DelAllNotify(Integer userId) {
-        userMapper.DelAllNotify(userId);
-        return jsonObject.put("success","1").toString();
+        try{
+            userMapper.DelAllNotify(userId);
+            jsonObject.put("success","1");
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            jsonObject.put("success","0");
+        }
+        return jsonObject.toString();
     }
 
 

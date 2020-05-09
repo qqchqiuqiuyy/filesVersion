@@ -8,6 +8,6 @@ public class StartController {
 
     @RequestMapping("/")
     public String go(){
-        return "pages/fileList";
+        return "post/toPost";
     }
 }

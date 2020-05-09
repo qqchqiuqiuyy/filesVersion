@@ -93,4 +93,15 @@ public interface PostMapper {
     Post GetPost(@Param("id")  Integer pid);
     @Select("SELECT * FROM posts WHERE pid = #{id} AND collegeId = #{collegeId}")
     Post GetPost2(@Param("id") Integer pid, @Param("collegeId") Integer collegeId);
+
+
+    @Select("SELECT * from posts WHERE postTitle LIKE CONCAT('%',#{postTitle},'%')" +
+            " ORDER BY postCreatTime desc")
+    public List<Post> GetPost3(@Param("postTitle") String postTitle);
+
+    @Select("SELECT * from posts WHERE postTitle LIKE CONCAT('%',#{postTitle},'%') AND collegeId = #{collegeId} " +
+            " ORDER BY postCreatTime desc" )
+    public List<Post>  GetPost4(@Param("postTitle") String postTitle, @Param("collegeId") Integer collegeId);
+
+
 }

@@ -27,7 +27,7 @@ public class FileService {
 
 
     public String downloadFile(Integer id, HttpServletRequest request, HttpServletResponse response) {
-      /*  File file = fileMapper.GetFileById(id);*/
+        //根据id查找文件存放路径
         PostFile postFile = postMapper.GetPostPath(id);
         String path = postFile.getPath();
         java.io.File realFile = new java.io.File(path);
@@ -61,9 +61,7 @@ public class FileService {
                 bufferedOutputStream.write(bytes);
             }
             bufferedOutputStream.flush();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }  catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -74,7 +72,6 @@ public class FileService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         jsonObject.put("msg","下载成功");
         jsonObject.put("success",1);

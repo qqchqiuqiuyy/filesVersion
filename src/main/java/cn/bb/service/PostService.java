@@ -38,7 +38,6 @@ public class PostService {
     PostRepository postRepository;
 
     public PageInfo<Post> GetPostList(String postTitle, Integer pageIndex,Integer collegeId) {
-
         if (postTitle == null || postTitle.equals("null") || "".equals(postTitle)) {
             postTitle = "";
             PageHelper.startPage(pageIndex, Page.PAGE_SIZE);
@@ -50,7 +49,6 @@ public class PostService {
             }
             return new PageInfo<>(posts);
         }
-
         // 构建查询条件
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
         // 添加基本分词查询
@@ -59,15 +57,20 @@ public class PostService {
         // 搜索，获取结果
         org.springframework.data.domain.Page<Post> search = postRepository.search(queryBuilder.build());
         List<Post> posts = new ArrayList<>();
-
         if (collegeId == -1) {
             for(Post p : search) {
                 posts.add(postMapper.GetPost(p.getPid()));
+            }
+            if (posts.size() == 0) {
+                return new PageInfo<>(postMapper.GetPost3(postTitle));
             }
             return new PageInfo<>(posts);
         }
         for(Post p : search) {
             posts.add(postMapper.GetPost2(p.getPid(),collegeId));
+        }
+        if (posts.size() == 0) {
+            return new PageInfo<>(postMapper.GetPost4(postTitle,collegeId));
         }
         return new PageInfo<>(posts);
     }
