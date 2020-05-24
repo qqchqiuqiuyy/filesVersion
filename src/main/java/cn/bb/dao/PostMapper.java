@@ -103,5 +103,6 @@ public interface PostMapper {
             " ORDER BY postCreatTime desc" )
     public List<Post>  GetPost4(@Param("postTitle") String postTitle, @Param("collegeId") Integer collegeId);
 
-
+    @Select("select * from collections where pid = #{postId} AND uid = #{postUserId}")
+    public Collections GetCollections(@Param("postUserId") Integer postUserId, @Param("postId") Integer postId);
 }

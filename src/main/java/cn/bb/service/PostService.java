@@ -128,10 +128,13 @@ public class PostService {
     @Transactional(rollbackFor = Exception.class)
     public String CollectPost(String postTitle, Integer postUserId, Integer postId) {
         try {
-            if (1 == postMapper.CollectPost(postTitle,postUserId,postId) ) {
-                jsonObject.put("success",1);
-            } else {
-                jsonObject.put("success",0);
+            Collections collections = postMapper.GetCollections(postUserId, postId);
+            if(collections == null) {
+                if (1 == postMapper.CollectPost(postTitle,postUserId,postId) ) {
+                    jsonObject.put("success",1);
+                } else {
+                    jsonObject.put("success",0);
+                }
             }
         }catch (Exception ex) {
             ex.printStackTrace();

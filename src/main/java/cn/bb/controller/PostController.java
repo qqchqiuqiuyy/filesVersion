@@ -44,7 +44,7 @@ public class PostController {
                          @RequestParam(name = "collegeId",defaultValue = "-1" ,required = false) Integer collegeId,
                          Model model,HttpServletRequest request) {
         if (indexPage == null) {
-            indexPage = 0;
+            indexPage = 1;
         }
         PageInfo<Post> filePageInfo = postService.GetPostList(postTitle, indexPage,collegeId);
         if (indexPage > filePageInfo.getPages()) {
@@ -53,7 +53,7 @@ public class PostController {
         HttpSession session = request.getSession();
         session.setAttribute("collegeId",collegeId);
         model.addAttribute("postRands",postService.GetPostRand());
-        model.addAttribute("indexPage",indexPage+1);
+        model.addAttribute("indexPage",indexPage);
         model.addAttribute("posts",filePageInfo.getList());
         model.addAttribute("totalPage",filePageInfo.getPages());
         model.addAttribute("colleges",postService.GetAllColleges());
@@ -87,6 +87,7 @@ public class PostController {
     public String CollectionPost(@PathVariable(name = "postTitle") String postTitle,
                                  @PathVariable(name = "postUserId") Integer postUserId,
                                  @PathVariable(name = "postId") Integer postId) {
+        // poserUserId不对
         return postService.CollectPost(postTitle, postUserId, postId);
     }
 
